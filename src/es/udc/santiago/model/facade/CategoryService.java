@@ -9,23 +9,30 @@ import android.util.Log;
 import com.j256.ormlite.dao.Dao;
 
 import es.udc.santiago.model.backend.CategoryVO;
+import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.exceptions.DuplicateEntryException;
 import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.util.GenericService;
 import es.udc.santiago.model.util.ModelUtilities;
+
 /**
- * Specifies methods to processing categories.  
+ * Specifies methods to processing categories.
+ * 
  * @author Santiago Munín González
- *
+ * 
  */
 public class CategoryService implements GenericService<Long, Category> {
-	
+
 	private static final String TAG = "CategoryService";
 	private Dao<CategoryVO, Long> catDao;
-	
+
+	public CategoryService(DatabaseHelper dbHelper) throws SQLException {
+		this.catDao = dbHelper.getCategoryDao();
+	}
+
 	@Override
 	public Long add(Category object) throws DuplicateEntryException {
-		Log.i(TAG,"Adding...");
+		Log.i(TAG, "Adding...");
 		CategoryVO c = ModelUtilities.publicObjectToValueObject(object);
 		if (c == null) {
 			return (long) -1;
@@ -40,7 +47,7 @@ public class CategoryService implements GenericService<Long, Category> {
 
 	@Override
 	public Category get(Long key) throws EntryNotFoundException {
-		Log.i(TAG,"Getting...");
+		Log.i(TAG, "Getting...");
 		CategoryVO fetched;
 		try {
 			fetched = this.catDao.queryForId(key);
@@ -52,7 +59,7 @@ public class CategoryService implements GenericService<Long, Category> {
 
 	@Override
 	public List<Category> getAll() {
-		Log.i(TAG,"Getting all...");
+		Log.i(TAG, "Getting all...");
 		List<CategoryVO> list;
 		try {
 			list = this.catDao.queryForAll();
@@ -68,23 +75,26 @@ public class CategoryService implements GenericService<Long, Category> {
 	}
 
 	@Override
-	public void update(Category object) throws EntryNotFoundException {
-		Log.i(TAG,"Updating...");
+	public void update(Category object) throws EntryNotFoundException, DuplicateEntryException {
+		Log.i(TAG, "Updating...");
 		CategoryVO updateObject = ModelUtilities
 				.publicObjectToValueObject(object);
 		if (updateObject != null) {
+			//Checks if exists a category with the same name
+			if (exists(object)) {
+				throw new DuplicateEntryException();
+			} else {
 			try {
 				this.catDao.update(updateObject);
 			} catch (SQLException e) {
 				throw new EntryNotFoundException();
-			}
+			}}
 		}
-		
 	}
 
 	@Override
 	public void delete(Long key) throws EntryNotFoundException {
-		Log.i(TAG,"Deleting...");
+		Log.i(TAG, "Deleting...");
 		try {
 			this.catDao.deleteById(key);
 		} catch (SQLException e) {
@@ -100,9 +110,4 @@ public class CategoryService implements GenericService<Long, Category> {
 			return false;
 		}
 	}
-
-	
-	
-	
-
 }

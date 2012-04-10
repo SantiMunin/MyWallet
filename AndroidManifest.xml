@@ -4,7 +4,9 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
-    <uses-sdk android:minSdkVersion="7" />
+    <uses-sdk android:targetSdkVersion="7" 
+    		android:minSdkVersion="7"
+        />
      <!-- Para poder ejecutar test JUnit con Android -->
 	<instrumentation android:name="android.test.InstrumentationTestRunner"
 		    android:targetPackage="es.udc.santiago"
@@ -13,6 +15,14 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
         <uses-library android:name="android.test.runner" />
+        <activity android:name=".view.categories.ManageCategoriesActivity"
+            >
+             <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".view.categories.EditCategoryActivity"/>
     </application>
 
 </manifest>

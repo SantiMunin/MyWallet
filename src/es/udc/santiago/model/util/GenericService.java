@@ -41,9 +41,10 @@ public interface GenericService<PK extends Serializable, Entity> {
 	/**
 	 * Updates an entity.
 	 * @param object
+	 * @throws DuplicateEntryException 
 	 * @throws SQLException 
 	 */
-	public void update(Entity object) throws EntryNotFoundException;
+	public void update(Entity object) throws EntryNotFoundException, DuplicateEntryException;
 	
 	/**
 	 * Deletes an entity.

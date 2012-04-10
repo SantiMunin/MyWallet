@@ -124,6 +124,7 @@ public class ModelUtilities {
 		res.setEndDate(c.getEndDate());
 		res.setMovType(MovementType.getFromCode(c.getMovType()));
 		res.setPeriod(Period.getFromCode(c.getPeriod()));
+		res.setCategory(new Category(c.getCategory().getId()));
 		return res;
 	}
 	/**
@@ -143,6 +144,7 @@ public class ModelUtilities {
 		res.setEndDate(c.getEndDate());
 		res.setMovType(c.getMovType().getValue());
 		res.setPeriod(c.getPeriod().getCode());
+		res.setCategory(new CategoryVO(c.getCategory().getId()));
 		return res;
 	}
 }

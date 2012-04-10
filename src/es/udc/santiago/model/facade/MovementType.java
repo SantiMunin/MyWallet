@@ -35,9 +35,9 @@ public enum MovementType {
 	public static MovementType getFromCode(int code) {
 		switch (code) {
 		case 0:
-			return MovementType.INCOME;
-		case 1:
 			return MovementType.SPEND;
+		case 1:
+			return MovementType.INCOME;
 		default:
 			return null;
 		}

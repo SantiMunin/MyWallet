@@ -44,11 +44,11 @@ public class CashFlowsTest extends AndroidTestCase {
 				TableUtils.clearTable(
 						this.databaseHelper.getConnectionSource(),
 						CategoryVO.class);
-				
+
 				this.databaseHelper.close();
 			}
 		} catch (SQLException e) {
-			//fail();
+			// fail();
 		}
 	}
 
@@ -60,13 +60,13 @@ public class CashFlowsTest extends AndroidTestCase {
 		catId1 = c.getId();
 		Date now = new Date();
 		Date afterNow = new Date();
-		CashFlowVO cash1 = new CashFlowVO(-1, "Concept_test1", (float) 6.78,
-				c, now, afterNow, 0, 0);
-		 this.cashDao.create(cash1);
-		 long cashId1 = cash1.getId();
+		CashFlowVO cash1 = new CashFlowVO(-1, "Concept_test1", (float) 6.78, c,
+				now, afterNow, 0, 0);
+		this.cashDao.create(cash1);
+		long cashId1 = cash1.getId();
 		c.setName("Test2");
-		 this.catDao.create(c);
-		 long catId2 = c.getId();
+		this.catDao.create(c);
+		long catId2 = c.getId();
 
 		c.setId(catId2);
 		cash1.setCategory(c);
@@ -76,20 +76,20 @@ public class CashFlowsTest extends AndroidTestCase {
 		cash1 = cashDao.queryForId(cashId1);
 		CashFlowVO cash2 = cashDao.queryForId(cashId2);
 		assertEquals(cash1.getAmount(), (float) 6.78);
-		assertEquals(cash1.getConcept(),"Concept_test1");
-		assertEquals(cash1.getMovType(),0);
-		assertEquals(cash1.getPeriod(),0);
+		assertEquals(cash1.getConcept(), "Concept_test1");
+		assertEquals(cash1.getMovType(), 0);
+		assertEquals(cash1.getPeriod(), 0);
 		assertEquals(cash1.getId(), cashId1);
 		assertEquals(cash1.getDate(), now);
 		assertEquals(cash1.getEndDate(), afterNow);
-		assertEquals(cash1.getCategory().getId(),catId1);
+		assertEquals(cash1.getCategory().getId(), catId1);
 		assertEquals(cash2.getAmount(), (float) 6.78);
-		assertEquals(cash2.getConcept(),"Concept_test1");
-		assertEquals(cash2.getMovType(),0);
-		assertEquals(cash2.getPeriod(),0);
+		assertEquals(cash2.getConcept(), "Concept_test1");
+		assertEquals(cash2.getMovType(), 0);
+		assertEquals(cash2.getPeriod(), 0);
 		assertEquals(cash2.getId(), cashId2);
 		assertEquals(cash2.getDate(), now);
 		assertEquals(cash2.getEndDate(), afterNow);
-		assertEquals(cash2.getCategory().getId(),catId2);
+		assertEquals(cash2.getCategory().getId(), catId2);
 	}
 }

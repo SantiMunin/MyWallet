@@ -8,6 +8,7 @@ import android.test.AndroidTestCase;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.table.TableUtils;
 
 import es.udc.santiago.model.backend.CashFlowVO;
 import es.udc.santiago.model.backend.CategoryVO;
@@ -38,7 +39,7 @@ public class CategoriesTest extends AndroidTestCase {
 	}
 
 	public void tearDown() {
-		/*try {
+		try {
 			if (this.databaseHelper != null && this.databaseHelper.isOpen()) {
 				TableUtils.clearTable(this.databaseHelper.getConnectionSource(), CashFlowVO.class);
 				TableUtils.clearTable(
@@ -46,7 +47,7 @@ public class CategoriesTest extends AndroidTestCase {
 						CategoryVO.class);
 			}
 		} catch (SQLException e) {
-		}*/
+		}
 	}
 
 	public void testCRUD() throws SQLException {

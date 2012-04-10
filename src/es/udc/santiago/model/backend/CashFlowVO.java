@@ -18,17 +18,17 @@ public class CashFlowVO {
 	private long id;
 	@DatabaseField
 	private String concept;
-	@DatabaseField(canBeNull=false)
+	@DatabaseField(canBeNull = false)
 	private float amount;
-	@DatabaseField(foreign=true)
+	@DatabaseField(foreign = true, foreignAutoCreate = true, canBeNull = true)
 	private CategoryVO category;
-	@DatabaseField(canBeNull=false, dataType=DataType.DATE_STRING)
+	@DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING)
 	private Date date;
-	@DatabaseField(dataType=DataType.DATE_STRING)
+	@DatabaseField(dataType = DataType.DATE_STRING)
 	private Date endDate;
-	@DatabaseField(canBeNull=false)
+	@DatabaseField(canBeNull = false)
 	private int period;
-	@DatabaseField(canBeNull=false)
+	@DatabaseField(canBeNull = false)
 	private int movType;
 
 	public CashFlowVO() {
@@ -39,8 +39,9 @@ public class CashFlowVO {
 		this.id = id;
 	}
 
-	public CashFlowVO(long id, String concept, float amount, CategoryVO category,
-			Date date, Date endDate, int period, int movType) {
+	public CashFlowVO(long id, String concept, float amount,
+			CategoryVO category, Date date, Date endDate, int period,
+			int movType) {
 		super();
 		this.id = id;
 		this.concept = concept;
@@ -107,6 +108,7 @@ public class CashFlowVO {
 	public void setMovType(int movType) {
 		this.movType = movType;
 	}
+
 	public CategoryVO getCategory() {
 		return category;
 	}

@@ -3,5 +3,20 @@
 
     <string name="hello">Hello World!</string>
     <string name="app_name">MyWallet</string>
-
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="id">Id</string>
+    <string name="name">Name</string>
+    <string name="error_empty">You must provide not empty data.</string>
+    <string name="error_notExists">Couldn\'t found an item with the given id.</string>
+    <string name="error_cat_alreadyExists">A category with that name already exists.</string>
+    <string name="category">Category</string>
+    <string name="type">Type</string>
+    <string name="period">Period</string>
+	<string name="date">Date</string>
+	<string name="until">Until</string>
+	<string name="concept">Concept</string>
+	<string name="movType">Movement type</string>
+	<string name="amount">Amount</string>
 </resources>

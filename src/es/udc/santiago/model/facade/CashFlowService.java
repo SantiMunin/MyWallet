@@ -23,7 +23,7 @@ import es.udc.santiago.model.util.ModelUtilities;
  */
 public class CashFlowService implements GenericService<Long, CashFlow> {
 
-	private static final String TAG ="CashFlowService";
+	private static final String TAG = "CashFlowService";
 	private Dao<CashFlowVO, Long> cashDao;
 
 	public CashFlowService(DatabaseHelper dbHelper) throws SQLException {
@@ -32,7 +32,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 
 	@Override
 	public Long add(CashFlow object) throws DuplicateEntryException {
-		Log.i(TAG,"Adding...");
+		Log.i(TAG, "Adding...");
 		CashFlowVO c = ModelUtilities.publicObjectToValueObject(object);
 		if (c == null) {
 			return (long) -1;
@@ -48,19 +48,21 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 
 	@Override
 	public CashFlow get(Long key) throws EntryNotFoundException {
-		Log.i(TAG,"Getting...");
+		Log.i(TAG, "Getting...");
 		CashFlowVO fetched;
 		try {
 			fetched = this.cashDao.queryForId(key);
+			this.cashDao.refresh(fetched);
 		} catch (SQLException e) {
 			fetched = null;
 		}
+
 		return ModelUtilities.valueObjectToPublicObject(fetched);
 	}
 
 	@Override
 	public List<CashFlow> getAll() {
-		Log.i(TAG,"Getting all...");
+		Log.i(TAG, "Getting all...");
 		List<CashFlowVO> list;
 		try {
 			list = this.cashDao.queryForAll();
@@ -75,23 +77,22 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	}
 
 	@Override
-	public void update(CashFlow object) throws EntryNotFoundException {
-		Log.i(TAG,"Updating...");
+	public void update(CashFlow object) throws EntryNotFoundException, DuplicateEntryException {
+		Log.i(TAG, "Updating...");
 		CashFlowVO updateObject = ModelUtilities
 				.publicObjectToValueObject(object);
 		if (updateObject != null) {
-			try {
-				this.cashDao.update(updateObject);
-			} catch (SQLException e) {
-				throw new EntryNotFoundException();
-			}
+				try {
+					this.cashDao.update(updateObject);
+				} catch (SQLException e) {
+					throw new EntryNotFoundException();
+				}	
 		}
-
 	}
 
 	@Override
 	public void delete(Long key) throws EntryNotFoundException {
-		Log.i(TAG,"Deleting...");
+		Log.i(TAG, "Deleting...");
 		try {
 			this.cashDao.deleteById(key);
 		} catch (SQLException e) {
@@ -101,7 +102,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 
 	@Override
 	public boolean exists(CashFlow object) {
-		Log.i(TAG,"Checking if exists...");
+		Log.i(TAG, "Checking if exists...");
 		try {
 			return this.cashDao.idExists(object.getId());
 		} catch (SQLException e) {
