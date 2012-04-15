@@ -11,6 +11,7 @@
     <string name="error_empty">You must provide not empty data.</string>
     <string name="error_notExists">Couldn\'t found an item with the given id.</string>
     <string name="error_cat_alreadyExists">A category with that name already exists.</string>
+    <string name="error_addingCashFlow">There was a problem adding the operation.</string>
     <string name="category">Category</string>
     <string name="type">Type</string>
     <string name="period">Period</string>
@@ -19,4 +20,13 @@
 	<string name="concept">Concept</string>
 	<string name="movType">Movement type</string>
 	<string name="amount">Amount</string>
+	<string name="error_fieldsNotFilled">There are required field without values.</string>
+	<string name="expense">Expense</string>
+	<string name="income">Income</string>
+	<string name="once">Once</string>
+	<string name="monthly">Monthly</string>
+	<string name="yearly">Yearly</string>
+	<string name="today">Today</string>
+	<string name="indefinite">Indefinite</string>
+	<string name="added">Added</string>
 </resources>

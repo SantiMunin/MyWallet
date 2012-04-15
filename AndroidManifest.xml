@@ -17,12 +17,15 @@
         <uses-library android:name="android.test.runner" />
         <activity android:name=".view.categories.ManageCategoriesActivity"
             >
+             
+        </activity>
+         <activity android:name=".view.categories.EditCategoryActivity"/>
+         <activity android:name=".view.cashflows.AddOperationActivity">
              <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".view.categories.EditCategoryActivity"/>
+            </activity>
     </application>
 
 </manifest>

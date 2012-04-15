@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+     >
+
+    <TableRow
+        android:id="@+id/addOp_catRow"
+        style="@style/AddOpTableRow"
+         >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/category"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/addOp_catSpinner"
+            style="@style/AddOpSpinner" />
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/addOp_conceptRow"
+        style="@style/AddOpTableRow"
+         >
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/concept"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/addOp_conceptEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10">
+            
+            <requestFocus />
+            </EditText>
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/addOp_movTypeRow"
+  style="@style/AddOpTableRow" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/movType"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/addOp_movTypeSpinner"
+            style="@style/AddOpSpinner" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/addOp_periodRow"
+       style="@style/AddOpTableRow" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/period"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Spinner
+            android:id="@+id/addOp_periodSpinner"
+            android:layout_width="20dp" />
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/addOp_amountRow"
+        style="@style/AddOpTableRow" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/amount"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/addOp_amountEntry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="numberDecimal" >
+
+        </EditText>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/addOp_DateRow"
+        style="@style/AddOpTableRow" >
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/addOp_dateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/today" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/addOp_endDateRow"
+        style="@style/AddOpTableRow" >
+
+        <TextView
+            android:id="@+id/addOp_endDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/until"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:id="@+id/addOp_endDateButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/indefinite" />
+
+    </TableRow>
+
+    <Button
+        android:id="@+id/addOp_button"
+        android:layout_width="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add" />
+
+</TableLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/catTableLayout"
+     >
+
+    <ListView
+        android:id="@+id/categoryList"
+        android:layout_width="fill_parent"
+        android:layout_height="315dp"
+        android:layout_weight="0.61" >
+    </ListView>
+  
+  <EditText
+        android:id="@+id/catName"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content" 
+        android:inputType="text">
+        <requestFocus />
+
+    </EditText>
+    <Button
+        android:id="@+id/catAddButton"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="@string/add" />
+
+</TableLayout>
