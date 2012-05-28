@@ -18,7 +18,7 @@
 	<string name="date">Date</string>
 	<string name="until">Until</string>
 	<string name="concept">Concept</string>
-	<string name="movType">Movement type</string>
+	<string name="movType">Type</string>
 	<string name="amount">Amount</string>
 	<string name="error_fieldsNotFilled">There are required field without values.</string>
 	<string name="expense">Expense</string>
@@ -28,5 +28,7 @@
 	<string name="yearly">Yearly</string>
 	<string name="today">Today</string>
 	<string name="indefinite">Indefinite</string>
+	<string name="categories">Categories</string>
+	<string name="add_cashflow">Add a movement</string>
 	<string name="added">Added</string>
 </resources>

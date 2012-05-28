@@ -79,8 +79,6 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	private Spinner movementType;
 	private Spinner period;
 	private EditText amount;
-	private DatePicker date;
-	private DatePicker endDate;
 	private Button button;
 	private CategoryService catServ;
 	private CashFlowService cashServ;
@@ -96,9 +94,21 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		} catch (SQLException e) {
 			// TODO
 		}
+		// TODO remove later
+		Category c = new Category(-1, "Other");
+		try {
+			this.catServ.add(c);
+		} catch (DuplicateEntryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		initializeViews();
-	}
 
+	}
+	
+	/**
+	 * Date picker's dialogs
+	 */
 	protected Dialog onCreateDialog(int id) {
 		Calendar d = GregorianCalendar.getInstance();
 
@@ -109,7 +119,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 					d.get(Calendar.DATE));
 
 		case END_DATE_DIALOG_ID:
-			return new DatePickerDialog(this, dateListener,
+			return new DatePickerDialog(this, endDateListener,
 					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
 					d.get(Calendar.DATE));
 		}
@@ -175,8 +185,14 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 								.getFromCode(movementType
 										.getSelectedItemPosition());
 						// TODO check spinners
-						Category c = categoryList.get(category
-								.getSelectedItemPosition());
+						Category c;
+						if (category.getSelectedItemPosition() < 0) {
+							c = null;
+						} else {
+							c = categoryList.get(category
+									.getSelectedItemPosition());
+						}
+
 						Calendar date = new GregorianCalendar(dateYear,
 								dateMonth, dateDay);
 						Calendar endDate = (p != Period.ONCE) ? new GregorianCalendar(
@@ -195,11 +211,12 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						}
 
 						cashServ.add(cf);
-						Toast.makeText(getApplicationContext(), R.string.added, Toast.LENGTH_SHORT).show();
-						//TODO maybe back to another activity
+						Toast.makeText(getApplicationContext(), R.string.added,
+								Toast.LENGTH_SHORT).show();
+						// TODO maybe back to another activity
 					} catch (DuplicateEntryException e) {
 						// Won't happen
-						//TODO check another exceptions
+						// TODO check another exceptions
 						/*
 						 * } catch (Exception e) { Log.e(TAG,
 						 * "There was an exception adding the operation: " +

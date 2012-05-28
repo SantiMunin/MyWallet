@@ -44,8 +44,6 @@ public class CashFlowsTest extends AndroidTestCase {
 				TableUtils.clearTable(
 						this.databaseHelper.getConnectionSource(),
 						CategoryVO.class);
-
-				this.databaseHelper.close();
 			}
 		} catch (SQLException e) {
 			// fail();
