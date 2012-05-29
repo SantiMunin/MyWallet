@@ -16,4 +16,10 @@
         android:layout_height="wrap_content"
         android:text="@string/categories" />
 
+    <Button
+        android:id="@+id/movements_overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/movementsoverview" />
+
 </LinearLayout>

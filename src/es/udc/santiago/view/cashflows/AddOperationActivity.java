@@ -10,6 +10,7 @@ import java.util.List;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -98,6 +99,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		Category c = new Category(-1, "Other");
 		try {
 			this.catServ.add(c);
+			
 		} catch (DuplicateEntryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,7 +143,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
 		data = new ArrayList<String>();
-		data.add(getString(R.string.expense));
+		data.add(getString(R.string.spend));
 		data.add(getString(R.string.income));
 		movementType.setAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, data));
@@ -211,6 +213,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						}
 
 						cashServ.add(cf);
+						Log.i(TAG, "Added cashflow");
 						Toast.makeText(getApplicationContext(), R.string.added,
 								Toast.LENGTH_SHORT).show();
 						// TODO maybe back to another activity

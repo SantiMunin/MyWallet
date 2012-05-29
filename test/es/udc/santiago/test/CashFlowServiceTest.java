@@ -1,7 +1,9 @@
 package es.udc.santiago.test;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.test.AndroidTestCase;
 
@@ -26,6 +28,8 @@ public class CashFlowServiceTest extends AndroidTestCase {
 	private CategoryService catServ;
 	private DatabaseHelper databaseHelper = null;
 	private long id;
+	private long id2;
+	private long id3;
 
 	private DatabaseHelper getHelper() {
 		if (databaseHelper == null) {
@@ -41,6 +45,10 @@ public class CashFlowServiceTest extends AndroidTestCase {
 			this.catServ = new CategoryService(this.getHelper());
 			Category c = new Category(-1, "Test123");
 			this.id = this.catServ.add(c);
+			c = new Category(-1, "Test12d3");
+			this.id2 = this.catServ.add(c);
+			c = new Category(-1, "Test12s3");
+			this.id3 = this.catServ.add(c);
 		} catch (SQLException e) {
 		} catch (DuplicateEntryException e) {
 		}
@@ -108,5 +116,74 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		long cashId = this.service.add(c);
 		this.service.delete(cashId);
 		assertFalse(this.service.exists(c));
+	}
+	
+	public void testGetWithFilter() {
+		Calendar day1 = new GregorianCalendar(2012, 5, 27);
+		Calendar day2 = new GregorianCalendar(2012, 5, 25);
+		try {
+			CashFlow cf = new CashFlow(-1, "Income", (float) 2000,
+					new Category(id), day1.getTime(), null, Period.ONCE,
+					MovementType.INCOME);
+			this.service.add(cf);
+			cf = new CashFlow(-1, "Spend", (float) 2000, new Category(id2),
+					day2.getTime(), null, Period.ONCE, MovementType.SPEND);
+			this.service.add(cf);
+			cf = new CashFlow(-1, "SpendMonthly", (float) 2000, new Category(
+					id3), day1.getTime(), null, Period.MONTHLY,
+					MovementType.SPEND);
+			this.service.add(cf);
+			cf = new CashFlow(-1, "SpendYearly", (float) 2000,
+					new Category(id), day1.getTime(), null, Period.YEARLY,
+					MovementType.SPEND);
+			this.service.add(cf);
+			assertEquals(3,
+					this.service.getAllWithFilter(day1, Period.ONCE, null, null)
+							.size());
+			assertEquals(1,
+					this.service.getAllWithFilter(day2, Period.ONCE, null, null)
+							.size());
+			assertEquals(
+					4,
+					this.service.getAllWithFilter(day1, Period.MONTHLY, null,
+							null).size());
+			assertEquals(
+					4,
+					this.service.getAllWithFilter(day1, Period.YEARLY, null,
+							null).size());
+			assertEquals(
+					1,
+					this.service.getAllWithFilter(null, null,
+							MovementType.INCOME, null).size());
+			assertEquals(
+					3,
+					this.service.getAllWithFilter(null, null,
+							MovementType.SPEND, null).size());
+			assertEquals(
+					3,
+					this.service.getAllWithFilter(null, Period.YEARLY,
+							MovementType.SPEND, null).size());
+			assertEquals(
+					3,
+					this.service.getAllWithFilter(null, Period.YEARLY,
+							MovementType.SPEND, null).size());
+			assertEquals(
+					1,
+					this.service.getAllWithFilter(day2, null,
+							MovementType.SPEND, new Category(id2)).size());
+			assertEquals(
+					1,
+					this.service.getAllWithFilter(day2, null,
+							MovementType.SPEND, new Category(id2)).size());
+			assertEquals(
+					0,
+					this.service.getAllWithFilter(day1, Period.ONCE,
+							MovementType.SPEND, new Category(id2)).size());
+			
+
+		} catch (DuplicateEntryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

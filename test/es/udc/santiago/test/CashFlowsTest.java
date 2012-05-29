@@ -90,4 +90,6 @@ public class CashFlowsTest extends AndroidTestCase {
 		assertEquals(cash2.getEndDate(), afterNow);
 		assertEquals(cash2.getCategory().getId(), catId2);
 	}
+	
+	
 }

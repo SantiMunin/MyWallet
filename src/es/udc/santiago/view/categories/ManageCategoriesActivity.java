@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -61,7 +59,6 @@ public class ManageCategoriesActivity extends
 			listView = (ListView) this.findViewById(R.id.categoryList);
 			fillCategories();
 			catName = (EditText) this.findViewById(R.id.catName);
-			catName.setText("Set a name");
 			addButton = (Button) this.findViewById(R.id.catAddButton);
 			addButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -74,7 +71,7 @@ public class ManageCategoriesActivity extends
 							catServ.add(c);
 							fillCategories();
 						} catch (DuplicateEntryException e) {
-							//TODO text
+							// TODO text
 							Toast.makeText(getApplicationContext(),
 									"It already exists", Toast.LENGTH_SHORT)
 									.show();
@@ -88,8 +85,8 @@ public class ManageCategoriesActivity extends
 	}
 
 	/**
-	 * Fetches all categories and fill the list.
-	 * Not async task is needed for this.
+	 * Fetches all categories and fill the list. Not async task is needed for
+	 * this.
 	 */
 	private void fillCategories() {
 		this.list = catServ.getAll();
@@ -105,7 +102,7 @@ public class ManageCategoriesActivity extends
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				arg0.showContextMenuForChild(arg1); 
+				arg0.showContextMenuForChild(arg1);
 			}
 		});
 		registerForContextMenu(listView);
