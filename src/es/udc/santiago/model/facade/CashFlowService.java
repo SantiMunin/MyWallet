@@ -70,7 +70,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		try {
 			list = this.cashDao.queryForAll();
 			List<CashFlow> res = new ArrayList<CashFlow>();
-			for (CashFlowVO cashFlowVO : list) {
+			for (CashFlowVO cashFlowVO : list) {		
 				res.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
 			}
 			return res;

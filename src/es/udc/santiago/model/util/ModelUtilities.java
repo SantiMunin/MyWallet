@@ -4,8 +4,14 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import es.udc.santiago.model.backend.CashFlowVO;
 import es.udc.santiago.model.backend.CategoryVO;
@@ -124,7 +130,7 @@ public class ModelUtilities {
 		res.setEndDate(c.getEndDate());
 		res.setMovType(MovementType.getFromCode(c.getMovType()));
 		res.setPeriod(Period.getFromCode(c.getPeriod()));
-		res.setCategory(new Category(c.getCategory().getId()));
+		res.setCategory(new Category(c.getCategory().getId(), c.getCategory().getName()));
 		return res;
 	}
 	/**
@@ -146,5 +152,28 @@ public class ModelUtilities {
 		res.setPeriod(c.getPeriod().getCode());
 		res.setCategory(new CategoryVO(c.getCategory().getId()));
 		return res;
+	}
+	/**
+	 * Sorts a Map of <String, Float> entries.
+	 * @param map
+	 * @return Sorted map.
+	 */
+	public static Map<String, Float> sortByValue(Map<String, Float> map) {
+		List<Map.Entry<String, Float>> list = new LinkedList<Map.Entry<String, Float>>(
+				map.entrySet());
+
+		Collections.sort(list, new Comparator<Map.Entry<String, Float>>() {
+
+			public int compare(Map.Entry<String, Float> m1,
+					Map.Entry<String, Float> m2) {
+				return Float.compare(m1.getValue(), m2.getValue());
+			}
+		});
+
+		Map<String, Float> result = new LinkedHashMap<String, Float>();
+		for (Map.Entry<String, Float> entry : list) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
 	}
 }

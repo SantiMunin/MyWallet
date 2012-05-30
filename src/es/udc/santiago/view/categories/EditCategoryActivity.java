@@ -41,8 +41,12 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		editButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if (newName != null && newName.getText() != null) {
-					String temp = newName.getText().toString();
+				if (newName != null && newName.getText() != null
+						&& newName.getText().toString().length() > 0) {
+					String temp = newName.getText().toString().trim();
+					while (temp.startsWith(" ") && temp.length() > 0) {
+						temp.substring(1);
+					}
 					if (temp.length() > 0) {
 						Category c = new Category(givenId);
 						c.setName(temp);
@@ -50,7 +54,7 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 							catServ.update(c);
 							startActivity(new Intent(getApplicationContext(),
 									ManageCategoriesActivity.class));
-						// Error control
+							// Error control
 						} catch (EntryNotFoundException e) {
 							Toast.makeText(getApplicationContext(),
 									R.string.error_notExists,
