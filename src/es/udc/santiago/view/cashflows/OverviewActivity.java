@@ -35,6 +35,7 @@ import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
 import es.udc.santiago.model.util.ModelUtilities;
+import es.udc.santiago.view.ViewUtils;
 
 /**
  * Movements overview (daily, monthly or yearly).
@@ -164,9 +165,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			return new DatePickerDialog(this, dateListener,
 					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
 					d.get(Calendar.DATE));
-
 		}
-
 		return null;
 	}
 
@@ -220,20 +219,15 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		resetCategoryTop();
 		try {
 			setTopCategoryRow(R.id.topcat1, topList.get(0).getKey(),
-					R.id.topcat1_amount,
-					String.valueOf(topList.get(0).getValue()));
+					R.id.topcat1_amount, topList.get(0).getValue());
 			setTopCategoryRow(R.id.topcat2, topList.get(1).getKey(),
-					R.id.topcat2_amount,
-					String.valueOf(topList.get(1).getValue()));
+					R.id.topcat2_amount, topList.get(1).getValue());
 			setTopCategoryRow(R.id.topcat3, topList.get(2).getKey(),
-					R.id.topcat3_amount,
-					String.valueOf(topList.get(2).getValue()));
+					R.id.topcat3_amount, topList.get(2).getValue());
 			setTopCategoryRow(R.id.topcat4, topList.get(3).getKey(),
-					R.id.topcat4_amount,
-					String.valueOf(topList.get(3).getValue()));
+					R.id.topcat4_amount, topList.get(3).getValue());
 			setTopCategoryRow(R.id.topcat5, topList.get(4).getKey(),
-					R.id.topcat5_amount,
-					String.valueOf(topList.get(4).getValue()));
+					R.id.topcat5_amount, topList.get(4).getValue());
 		} catch (IndexOutOfBoundsException e) {
 		}
 	}
@@ -251,20 +245,21 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	 *            Amount.
 	 */
 	private void setTopCategoryRow(int textViewId1, String cat,
-			int textViewId2, String amount) {
+			int textViewId2, Float amount) {
 		TextView label, content;
 		label = (TextView) findViewById(textViewId1);
 		content = (TextView) findViewById(textViewId2);
-		if (amount.length() > 0) {
-			int color = getResources().getColor(R.color.red);
-			String symbol = "";
-			if (!amount.startsWith("-")) {
-				symbol = "+";
-				color = getResources().getColor(R.color.green);
-			}
+		if (amount != null) {
+			/*
+			 * int color = getResources().getColor(R.color.red); String symbol =
+			 * ""; if (!amount.startsWith("-")) { symbol = "+"; color =
+			 * getResources().getColor(R.color.green); }
+			 */
 			label.setText(cat);
-			content.setText(symbol + amount);
-			content.setTextColor(color);
+			ViewUtils.printAmount(getApplicationContext(), content, amount);
+			/*
+			 * content.setText(symbol + amount); content.setTextColor(color);
+			 */
 		} else {
 			label.setText("");
 			content.setText("");
@@ -275,11 +270,11 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	 * Resets top's TextViews.
 	 */
 	private void resetCategoryTop() {
-		setTopCategoryRow(R.id.topcat1, "", R.id.topcat1_amount, "");
-		setTopCategoryRow(R.id.topcat2, "", R.id.topcat2_amount, "");
-		setTopCategoryRow(R.id.topcat3, "", R.id.topcat3_amount, "");
-		setTopCategoryRow(R.id.topcat4, "", R.id.topcat4_amount, "");
-		setTopCategoryRow(R.id.topcat5, "", R.id.topcat5_amount, "");
+		setTopCategoryRow(R.id.topcat1, "", R.id.topcat1_amount, null);
+		setTopCategoryRow(R.id.topcat2, "", R.id.topcat2_amount, null);
+		setTopCategoryRow(R.id.topcat3, "", R.id.topcat3_amount, null);
+		setTopCategoryRow(R.id.topcat4, "", R.id.topcat4_amount, null);
+		setTopCategoryRow(R.id.topcat5, "", R.id.topcat5_amount, null);
 	}
 
 	/**
@@ -341,16 +336,19 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 					}
 				}
 			}
-			incomes.setText("+" + String.valueOf(totalIncomes));
-			spends.setText("-" + String.valueOf(totalSpends));
+			ViewUtils.printAmount(getApplicationContext(), incomes, totalIncomes);
+			ViewUtils.printAmount(getApplicationContext(), spends, totalSpends);
+			/*incomes.setText("+" + String.valueOf(totalIncomes));
+			spends.setText("-" + String.valueOf(totalSpends));*/
 			totalBalance = totalIncomes - totalSpends;
-			if (totalBalance < 0) {
+			ViewUtils.printAmount(getApplicationContext(), balance, totalBalance);
+			/*if (totalBalance < 0) {
 				balance.setText(String.valueOf(totalBalance));
 				balance.setTextColor(getResources().getColor(R.color.red));
 			} else {
 				balance.setText("+" + String.valueOf(totalBalance));
 				balance.setTextColor(getResources().getColor(R.color.green));
-			}
+			}*/
 			setTop5Categories(top5type);
 		}
 	}

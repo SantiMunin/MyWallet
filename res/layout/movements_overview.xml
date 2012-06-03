@@ -51,7 +51,8 @@
 
                     <TableRow
                         android:layout_width="fill_parent"
-                        android:layout_height="wrap_content" >
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp" >
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -62,6 +63,7 @@
                             android:id="@+id/incomes_daily"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="@string/incomes"
                             android:textColor="@color/green" />
                     </TableRow>
@@ -79,6 +81,7 @@
                             android:id="@+id/spends_daily"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="@string/spends"
                             android:textColor="@color/red" />
                     </TableRow>
@@ -96,6 +99,7 @@
                             android:id="@+id/balance_daily"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:text="@string/balance" />
                     </TableRow>
                 </TableLayout>
@@ -103,7 +107,7 @@
                 <TableLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="30dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:stretchColumns="0,1" >
