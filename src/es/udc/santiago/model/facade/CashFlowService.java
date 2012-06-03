@@ -46,7 +46,6 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		} catch (SQLException e) {
 			throw new DuplicateEntryException();
 		}
-
 	}
 
 	@Override
@@ -185,6 +184,8 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 				dayEnd.set(Calendar.HOUR_OF_DAY, 23);
 
 				where.between("date", dayStart.getTime(), dayEnd.getTime());
+				where.and();
+				where.between("period", Period.ONCE.getCode(), period.getCode());
 				needAnd = true;
 			}
 			List<CashFlowVO> dbResult = this.cashDao.query(qb.prepare());

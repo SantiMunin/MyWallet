@@ -137,14 +137,14 @@ public class CashFlowServiceTest extends AndroidTestCase {
 					new Category(id), day1.getTime(), null, Period.YEARLY,
 					MovementType.SPEND);
 			this.service.add(cf);
-			assertEquals(3,
+			assertEquals(1,
 					this.service.getAllWithFilter(day1, Period.ONCE, null, null)
 							.size());
 			assertEquals(1,
 					this.service.getAllWithFilter(day2, Period.ONCE, null, null)
 							.size());
 			assertEquals(
-					4,
+					3,
 					this.service.getAllWithFilter(day1, Period.MONTHLY, null,
 							null).size());
 			assertEquals(

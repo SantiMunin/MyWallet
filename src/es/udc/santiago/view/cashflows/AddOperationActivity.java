@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -154,6 +157,25 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		data.add(getString(R.string.yearly));
 		period.setAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item, data));
+		period.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				switch (arg0.getSelectedItemPosition()) {
+				case 0:
+					((TableRow) findViewById(R.id.addOp_endDateRow)).setVisibility(View.INVISIBLE);
+					break;
+				default:
+					((TableRow) findViewById(R.id.addOp_endDateRow)).setVisibility(View.VISIBLE);
+					break;
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+		});
 
 		amount = (EditText) findViewById(R.id.addOp_amountEntry);
 		dateYear = Calendar.getInstance().get(Calendar.YEAR);
