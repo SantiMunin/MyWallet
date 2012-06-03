@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -113,15 +115,6 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		} catch (SQLException e) {
 			// TODO
 		}
-		// TODO remove later
-		Category c = new Category(-1, "Other");
-		try {
-			this.catServ.add(c);
-
-		} catch (DuplicateEntryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		initializeViews();
 
 	}
@@ -195,6 +188,12 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		newCategoryPosition = -1;
 		int i = 0;
 		if (categoryList.size() > 0) {
+			Collections.sort(categoryList, new Comparator<Category>() {
+				@Override
+				public int compare(Category lhs, Category rhs) {
+					return lhs.getName().compareToIgnoreCase(rhs.getName());
+				}
+			});
 			for (Category c : categoryList) {
 				String name = c.getName();
 				data.add(name);
@@ -307,7 +306,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 										.getSelectedItemPosition());
 						// TODO check spinners
 						Category c;
-						if (category.getSelectedItemPosition() < 0) {
+						if (category.getSelectedItemPosition() < 0 || categoryList.size()==0) {
 							c = null;
 						} else {
 							c = categoryList.get(category
@@ -334,6 +333,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 							}
 						}
 						CashFlow cf;
+						try {
 						if (endDate != null) {
 							cf = new CashFlow(-1, concept.getText().toString(),
 									Float.valueOf(amount.getText().toString()),
@@ -344,9 +344,15 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 									Float.valueOf(amount.getText().toString()),
 									c, date.getTime(), null, p, mov);
 						}
-
 						cashServ.add(cf);
 						Log.i(TAG, "Added cashflow");
+						} catch(NumberFormatException nf) {
+							Toast.makeText(getApplicationContext(), R.string.bad_amount,
+									Toast.LENGTH_SHORT).show();
+							return;
+						}
+
+						
 						Toast.makeText(getApplicationContext(), R.string.added,
 								Toast.LENGTH_SHORT).show();
 					} catch (DuplicateEntryException e) {
