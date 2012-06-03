@@ -44,6 +44,8 @@
 	<string name="not_category_selected">A category must be selected</string>
 	<string name="endDate_before_date">The ending date must be after the operation date</string>
 	<string name="bad_amount">You did not provide a correct amount</string>
+	<string name="currency">Currency</string>
+	<string name="options">Options</string>
     <color name="green">#00FF00</color>
     <color name="red">#FF0000</color>
 

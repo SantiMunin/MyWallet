@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="movementtypes">
-        <item>Incomes</item>
-        <item>Spends</item>
-        
+        <item>Income</item>
+        <item>Spend</item>
+    </string-array>
+    <string-array name="currency">
+        <item>€</item>
+        <item>$</item>
+        <item>¥</item>
     </string-array>
     
 </resources>

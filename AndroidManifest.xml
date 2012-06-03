@@ -27,9 +27,8 @@
         </activity>
         <activity android:name=".view.categories.ManageCategoriesActivity" />
         <activity android:name=".view.categories.EditCategoryActivity" />
-        <activity
-            android:name=".view.cashflows.AddOperationActivity"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".view.cashflows.AddOperationActivity" />
+        <activity android:name=".view.OptionsActivity" />
         <activity android:name=".view.cashflows.OverviewActivity" />
     </application>
 

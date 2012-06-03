@@ -35,6 +35,12 @@ public class MainActivity extends Activity {
 				startActivity(new Intent(getApplicationContext(), OverviewActivity.class));				
 			}
 		});
+		((Button) findViewById(R.id.options)).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(), OptionsActivity.class));				
+			}
+		});
 	}
 
 }

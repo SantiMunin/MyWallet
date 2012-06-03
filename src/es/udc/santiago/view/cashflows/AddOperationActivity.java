@@ -238,14 +238,9 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		});
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
-		List<String> data = new ArrayList<String>();
-		data = new ArrayList<String>();
-		data.add(getString(R.string.spend));
-		data.add(getString(R.string.income));
-		movementType.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, data));
+		movementType.setAdapter(ArrayAdapter.createFromResource(getApplicationContext(), R.array.movementtypes, android.R.layout.simple_spinner_item));
 		period = (Spinner) findViewById(R.id.addOp_periodSpinner);
-		data = new ArrayList<String>();
+		List<String> data = new ArrayList<String>();
 		data.add(getString(R.string.once));
 		data.add(getString(R.string.monthly));
 		data.add(getString(R.string.yearly));
