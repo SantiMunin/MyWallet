@@ -89,10 +89,10 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				.setContent(R.id.dailytab));
 		mTabHost.addTab(mTabHost.newTabSpec("monthly")
 				.setIndicator(getString(R.string.monthly))
-				.setContent(R.id.monthlytab));
+				.setContent(R.id.dailytab));
 		mTabHost.addTab(mTabHost.newTabSpec("yearly")
 				.setIndicator(getString(R.string.yearly))
-				.setContent(R.id.yearlytab));
+				.setContent(R.id.dailytab));
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -102,60 +102,21 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				}
 				if (tabId.equals("daily")) {
 					period = Period.ONCE;
-					dayButton = (Button) findViewById(R.id.daybutton);
-					dayButton.setText(DateFormat.getDateInstance().format(
-							day.getTime()));
-					incomes = (TextView) findViewById(R.id.incomes_daily);
-					spends = (TextView) findViewById(R.id.spends_daily);
-					balance = (TextView) findViewById(R.id.balance_daily);
 				}
 				if (tabId.equals("monthly")) {
 					period = Period.MONTHLY;
-					dayButton = (Button) findViewById(R.id.monthbutton);
-					dayButton.setText(DateFormat.getDateInstance().format(
-							day.getTime()));
-					incomes = (TextView) findViewById(R.id.incomes_monthly);
-					spends = (TextView) findViewById(R.id.spends_monthly);
-					balance = (TextView) findViewById(R.id.balance_monthly);
 				}
 				if (tabId.equals("yearly")) {
 					period = Period.YEARLY;
-					dayButton = (Button) findViewById(R.id.yearbutton);
-					dayButton.setText(DateFormat.getDateInstance().format(
-							day.getTime()));
-					incomes = (TextView) findViewById(R.id.incomes_yearly);
-					spends = (TextView) findViewById(R.id.spends_yearly);
-					balance = (TextView) findViewById(R.id.balance_yearly);
-
 				}
 				new GetMovementsTask().execute((Void) null);
 			}
 		});
-		mTabHost.setCurrentTab(0);
+		mTabHost.setCurrentTab(1);
 		day = Calendar.getInstance();
-		period = Period.ONCE;
-
-		new GetMovementsTask().execute((Void) null);
+		period = Period.MONTHLY;
 
 		dayButton = (Button) findViewById(R.id.daybutton);
-		dayButton.setText(getString(R.string.today));
-		dayButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showDialog(DATE_PICKER_DIALOG);
-			}
-		});
-		dayButton = (Button) findViewById(R.id.monthbutton);
-		dayButton.setText(getString(R.string.today));
-		dayButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showDialog(DATE_PICKER_DIALOG);
-			}
-		});
-		dayButton = (Button) findViewById(R.id.yearbutton);
 		dayButton.setText(getString(R.string.today));
 		dayButton.setOnClickListener(new OnClickListener() {
 
@@ -189,6 +150,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		incomes = (TextView) findViewById(R.id.incomes_daily);
 		spends = (TextView) findViewById(R.id.spends_daily);
 		balance = (TextView) findViewById(R.id.balance_daily);
+		new GetMovementsTask().execute((Void) null);
 	}
 
 	/**
@@ -217,8 +179,8 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	private void setTop5Categories(MovementType mType) {
 		int i = 0;
 		if (mType == MovementType.INCOME) {
-			catIncomes = ModelUtilities.sortByValue(catIncomes);
 			top5incomes.clear();
+			catIncomes = ModelUtilities.sortByValue(catIncomes);
 			for (Entry<String, Float> entry : catIncomes.entrySet()) {
 				if (i < TOP_CATEGORIES_MAX) {
 					top5incomes.add(entry);
@@ -228,8 +190,8 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				}
 			}
 		} else {
-			catSpends = ModelUtilities.sortByValue(catSpends);
 			top5spends.clear();
+			catSpends = ModelUtilities.sortByValue(catSpends);
 			for (Entry<String, Float> entry : catSpends.entrySet()) {
 				if (i < TOP_CATEGORIES_MAX) {
 					top5spends.add(entry);
@@ -290,17 +252,23 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	 */
 	private void setTopCategoryRow(int textViewId1, String cat,
 			int textViewId2, String amount) {
-		int color = getResources().getColor(R.color.green);
-		;
-		String symbol = "";
-		if (!amount.startsWith("-")) {
-			symbol = "+";
-			color = getResources().getColor(R.color.red);
+		TextView label, content;
+		label = (TextView) findViewById(textViewId1);
+		content = (TextView) findViewById(textViewId2);
+		if (amount.length() > 0) {
+			int color = getResources().getColor(R.color.red);
+			String symbol = "";
+			if (!amount.startsWith("-")) {
+				symbol = "+";
+				color = getResources().getColor(R.color.green);
+			}
+			label.setText(cat);
+			content.setText(symbol + amount);
+			content.setTextColor(color);
+		} else {
+			label.setText("");
+			content.setText("");
 		}
-		((TextView) findViewById(textViewId1)).setText(cat);
-		TextView t = (TextView) findViewById(textViewId2);
-		t.setText(symbol + amount);
-		t.setTextColor(color);
 	}
 
 	/**
@@ -332,8 +300,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		@Override
 		protected void onPostExecute(List<CashFlow> result) {
 			super.onPostExecute(result);
-			top5incomes.clear();
-			top5spends.clear();
+			resetCategoryTop();
 			catSpends.clear();
 			catIncomes.clear();
 			Map<String, Float> catBalance = new HashMap<String, Float>();
@@ -353,21 +320,25 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 					} else {
 						catBalance.put(catName, -amount);
 					}
+					if (catSpends.containsKey(catName)) {
+						catSpends.put(catName, catSpends.get(catName) - amount);
+					} else {
+						catSpends.put(catName, -amount);
+					}
 				} else {
 					totalIncomes += amount;
 					if (catBalance.containsKey(catName)) {
 						catBalance.put(catName,
 								amount + catBalance.get(catName));
 					} else {
-						catIncomes.put(catName, amount);
+						catBalance.put(catName, amount);
 					}
-				}
-			}
-			for (Entry<String, Float> entry : catBalance.entrySet()) {
-				if (entry.getValue() < 0) {
-					catSpends.put(entry.getKey(), entry.getValue());
-				} else {
-					catIncomes.put(entry.getKey(), entry.getValue());
+					if (catIncomes.containsKey(catName)) {
+						catIncomes.put(catName, catIncomes.get(catName)
+								+ amount);
+					} else {
+						catIncomes.put(catName, +amount);
+					}
 				}
 			}
 			incomes.setText("+" + String.valueOf(totalIncomes));
