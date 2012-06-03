@@ -2,7 +2,6 @@ package es.udc.santiago.view.categories;
 
 import java.sql.SQLException;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,9 +51,7 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						c.setName(temp);
 						try {
 							catServ.update(c);
-							startActivity(new Intent(getApplicationContext(),
-									ManageCategoriesActivity.class));
-							// Error control
+							finish();							
 						} catch (EntryNotFoundException e) {
 							Toast.makeText(getApplicationContext(),
 									R.string.error_notExists,
