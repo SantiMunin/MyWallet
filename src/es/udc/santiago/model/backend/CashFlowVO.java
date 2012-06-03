@@ -20,7 +20,7 @@ public class CashFlowVO {
 	private String concept;
 	@DatabaseField(canBeNull = false)
 	private float amount;
-	@DatabaseField(foreign = true, foreignAutoCreate = true, canBeNull = true, foreignAutoRefresh = true)
+	@DatabaseField(foreign = true, foreignAutoCreate = true, canBeNull = false, foreignAutoRefresh = true)
 	private CategoryVO category;
 	@DatabaseField(canBeNull = false, dataType = DataType.DATE_STRING)
 	private Date date;

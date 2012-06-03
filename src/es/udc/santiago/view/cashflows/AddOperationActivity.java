@@ -9,6 +9,8 @@ import java.util.List;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,7 @@ import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import es.udc.santiago.R;
 import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.exceptions.DuplicateEntryException;
+import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.facade.CashFlow;
 import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.Category;
@@ -45,38 +48,18 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	private static final String TAG = "Add operation";
 	private static final int DATE_DIALOG_ID = 0;
 	private static final int END_DATE_DIALOG_ID = 1;
+	private static final int NEW_CATEGORY_DIALOG_ID = 2;
+	private int newCategoryPosition = -1;
+	private String newCategory = "";
 	private int dateYear;
 	private int dateMonth;
 	private int dateDay;
 	private int endDateYear = -1;
 	private int endDateMonth = -1;
 	private int endDateDay = -1;
-	private DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			dateYear = year;
-			dateMonth = monthOfYear;
-			dateDay = dayOfMonth;
-			Calendar d = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-			dateButton
-					.setText(DateFormat.getDateInstance().format(d.getTime()));
-		}
-	};
-
-	private DatePickerDialog.OnDateSetListener endDateListener = new DatePickerDialog.OnDateSetListener() {
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			endDateYear = year;
-			endDateMonth = monthOfYear;
-			endDateDay = dayOfMonth;
-			Calendar endDate = new GregorianCalendar(year, monthOfYear,
-					dayOfMonth);
-			endDateButton.setText(DateFormat.getDateInstance().format(
-					endDate.getTime()));
-		}
-	};
+	private OnDismissListener newCategoryAdded;
+	private DatePickerDialog.OnDateSetListener dateListener;
+	private DatePickerDialog.OnDateSetListener endDateListener;
 	private List<Category> categoryList;
 	private Spinner category;
 	private EditText concept;
@@ -92,6 +75,38 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.add_operation);
+		newCategoryAdded = new OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				fillCategorySpinner();
+			}
+		};
+		dateListener = new DatePickerDialog.OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				dateYear = year;
+				dateMonth = monthOfYear;
+				dateDay = dayOfMonth;
+				Calendar d = new GregorianCalendar(year, monthOfYear,
+						dayOfMonth);
+				dateButton.setText(DateFormat.getDateInstance().format(
+						d.getTime()));
+			}
+		};
+		endDateListener = new DatePickerDialog.OnDateSetListener() {
+			@Override
+			public void onDateSet(DatePicker view, int year, int monthOfYear,
+					int dayOfMonth) {
+				endDateYear = year;
+				endDateMonth = monthOfYear;
+				endDateDay = dayOfMonth;
+				Calendar endDate = new GregorianCalendar(year, monthOfYear,
+						dayOfMonth);
+				endDateButton.setText(DateFormat.getDateInstance().format(
+						endDate.getTime()));
+			}
+		};
 		try {
 			catServ = new CategoryService(getHelper());
 			cashServ = new CashFlowService(getHelper());
@@ -102,7 +117,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		Category c = new Category(-1, "Other");
 		try {
 			this.catServ.add(c);
-			
+
 		} catch (DuplicateEntryException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,7 +125,47 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		initializeViews();
 
 	}
-	
+
+	/**
+	 * Builds the new category's dialog.
+	 * 
+	 * @return Dialog instance.
+	 */
+	private Dialog getNewCategoryDialog() {
+		final Dialog dialog = new Dialog(this);
+
+		dialog.setContentView(R.layout.add_category_dialog);
+		dialog.setTitle(getString(R.string.new_category_dialog));
+		((Button) dialog.findViewById(R.id.dialog_add_cat_button))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						String categoryName = ((EditText) dialog
+								.findViewById(R.id.dialog_category_name))
+								.getText().toString();
+						if (categoryName.length() > 0) {
+							try {
+								Category c = new Category(-1, categoryName);
+								Long id = catServ.add(c);
+								categoryList.add(catServ.get(id));
+								newCategory = categoryName;
+								dialog.dismiss();
+							} catch (DuplicateEntryException e) {
+								Toast.makeText(
+										getApplicationContext(),
+										getString(R.string.error_cat_alreadyExists),
+										Toast.LENGTH_SHORT).show();
+							} catch (EntryNotFoundException e) {
+								// Can't reach here
+							}
+						}
+					}
+				});
+		dialog.setOnDismissListener(newCategoryAdded);
+		return dialog;
+	}
+
 	/**
 	 * Date picker's dialogs
 	 */
@@ -127,8 +182,39 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 			return new DatePickerDialog(this, endDateListener,
 					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
 					d.get(Calendar.DATE));
+
+		case NEW_CATEGORY_DIALOG_ID:
+			return getNewCategoryDialog();
 		}
 		return null;
+	}
+
+	private void fillCategorySpinner() {
+		List<String> data = new ArrayList<String>();
+		categoryList = catServ.getAll();
+		newCategoryPosition = -1;
+		int i = 0;
+		if (categoryList.size() > 0) {
+			for (Category c : categoryList) {
+				String name = c.getName();
+				data.add(name);
+				// If there is a new category, it will be selected.
+				if (newCategory.equals(name)) {
+					newCategoryPosition = i;
+				}
+				i++;
+			}
+		} else {
+			data.add("");
+		}
+		data.add(getString(R.string.new_category));
+		category.setAdapter(new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, data));
+		if (newCategoryPosition >= 0) {
+			category.setSelection(newCategoryPosition, true);
+		} else {
+			category.setSelection(0);
+		}
 	}
 
 	/**
@@ -136,15 +222,24 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	 */
 	private void initializeViews() {
 		category = (Spinner) findViewById(R.id.addOp_catSpinner);
-		List<String> data = new ArrayList<String>();
-		categoryList = catServ.getAll();
-		for (Category c : categoryList) {
-			data.add(c.getName());
-		}
-		category.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, data));
+		fillCategorySpinner();
+		category.setOnItemSelectedListener(new OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				if (arg0.getSelectedItem().toString()
+						.equals(getString(R.string.new_category))) {
+					showDialog(NEW_CATEGORY_DIALOG_ID);
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+			}
+		});
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
+		List<String> data = new ArrayList<String>();
 		data = new ArrayList<String>();
 		data.add(getString(R.string.spend));
 		data.add(getString(R.string.income));
@@ -164,10 +259,12 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 					int arg2, long arg3) {
 				switch (arg0.getSelectedItemPosition()) {
 				case 0:
-					((TableRow) findViewById(R.id.addOp_endDateRow)).setVisibility(View.INVISIBLE);
+					((TableRow) findViewById(R.id.addOp_endDateRow))
+							.setVisibility(View.INVISIBLE);
 					break;
 				default:
-					((TableRow) findViewById(R.id.addOp_endDateRow)).setVisibility(View.VISIBLE);
+					((TableRow) findViewById(R.id.addOp_endDateRow))
+							.setVisibility(View.VISIBLE);
 					break;
 				}
 			}
@@ -217,11 +314,25 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 									.getSelectedItemPosition());
 						}
 
+						if (c == null) {
+							Toast.makeText(getApplicationContext(),
+									R.string.not_category_selected,
+									Toast.LENGTH_SHORT).show();
+							return;
+						}
+
 						Calendar date = new GregorianCalendar(dateYear,
 								dateMonth, dateDay);
 						Calendar endDate = (p != Period.ONCE) ? new GregorianCalendar(
 								endDateYear, endDateMonth, endDateDay) : null;
-						// TODO check date and endDate
+						if (endDate != null) {
+							if (date.after(endDate)) {
+								Toast.makeText(getApplicationContext(),
+										R.string.endDate_before_date,
+										Toast.LENGTH_SHORT).show();
+								return;
+							}
+						}
 						CashFlow cf;
 						if (endDate != null) {
 							cf = new CashFlow(-1, concept.getText().toString(),
@@ -238,18 +349,7 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						Log.i(TAG, "Added cashflow");
 						Toast.makeText(getApplicationContext(), R.string.added,
 								Toast.LENGTH_SHORT).show();
-						// TODO maybe back to another activity
 					} catch (DuplicateEntryException e) {
-						// Won't happen
-						// TODO check another exceptions
-						/*
-						 * } catch (Exception e) { Log.e(TAG,
-						 * "There was an exception adding the operation: " +
-						 * e.getMessage());
-						 * Toast.makeText(getApplicationContext(),
-						 * R.string.error_addingCashFlow,
-						 * Toast.LENGTH_SHORT).show();
-						 */
 					}
 				} else {
 					Toast.makeText(getApplicationContext(),
@@ -270,7 +370,6 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 				|| amount == null) {
 			return false;
 		}
-		// TODO check values
 		return true;
 	}
 }

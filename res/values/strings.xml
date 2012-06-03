@@ -39,7 +39,10 @@
     <string name="year">Year</string>
     <string name="movementsoverview">Movements overview</string>
     <string name="topcat">Top categories</string>
-
+	<string name="new_category">New&#8230;</string>
+	<string name="new_category_dialog">Type new category</string>
+	<string name="not_category_selected">A category must be selected</string>
+	<string name="endDate_before_date">The ending date must be after the operation date</string>
     <color name="green">#00FF00</color>
     <color name="red">#FF0000</color>
 
