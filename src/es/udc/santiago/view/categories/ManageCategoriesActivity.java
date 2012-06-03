@@ -84,6 +84,11 @@ public class ManageCategoriesActivity extends
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		fillCategories();
+	}
 	/**
 	 * Fetches all categories and fill the list. Not async task is needed for
 	 * this.

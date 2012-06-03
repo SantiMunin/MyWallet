@@ -83,14 +83,18 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		id.setText(Long.toString(givenId));
 		name = (TextView) findViewById(R.id.editCat_NameValue);
+		newName = (EditText) findViewById(R.id.editCat_newName);
 		try {
 			catServ = new CategoryService(getHelper());
 			try {
-				name.setText(catServ.get(givenId).getName());
+				String catName = catServ.get(givenId).getName();
+				name.setText(catName);
+				newName.setText(catName);
 			} catch (EntryNotFoundException e1) {
 				// Should not reach here.
 			}
-			newName = (EditText) findViewById(R.id.editCat_newName);
+			
+			
 		} catch (SQLException e) {
 			// Should not reach here.
 		}
