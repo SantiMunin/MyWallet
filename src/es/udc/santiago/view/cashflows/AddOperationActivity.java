@@ -238,7 +238,9 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		});
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
-		movementType.setAdapter(ArrayAdapter.createFromResource(getApplicationContext(), R.array.movementtypes, android.R.layout.simple_spinner_item));
+		movementType.setAdapter(ArrayAdapter.createFromResource(
+				getApplicationContext(), R.array.movementtypes,
+				android.R.layout.simple_spinner_item));
 		period = (Spinner) findViewById(R.id.addOp_periodSpinner);
 		List<String> data = new ArrayList<String>();
 		data.add(getString(R.string.once));
@@ -301,7 +303,8 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 										.getSelectedItemPosition());
 						// TODO check spinners
 						Category c;
-						if (category.getSelectedItemPosition() < 0 || categoryList.size()==0) {
+						if (category.getSelectedItemPosition() < 0
+								|| categoryList.size() == 0) {
 							c = null;
 						} else {
 							c = categoryList.get(category
@@ -317,7 +320,8 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 						Calendar date = new GregorianCalendar(dateYear,
 								dateMonth, dateDay);
-						Calendar endDate = (p != Period.ONCE) ? new GregorianCalendar(
+						// Periodic movement and time limit?
+						Calendar endDate = (p != Period.ONCE && (endDateYear != -1)) ? new GregorianCalendar(
 								endDateYear, endDateMonth, endDateDay) : null;
 						if (endDate != null) {
 							if (date.after(endDate)) {
@@ -329,25 +333,26 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						}
 						CashFlow cf;
 						try {
-						if (endDate != null) {
-							cf = new CashFlow(-1, concept.getText().toString(),
-									Float.valueOf(amount.getText().toString()),
-									c, date.getTime(), endDate.getTime(), p,
-									mov);
-						} else {
-							cf = new CashFlow(-1, concept.getText().toString(),
-									Float.valueOf(amount.getText().toString()),
-									c, date.getTime(), null, p, mov);
-						}
-						cashServ.add(cf);
-						Log.i(TAG, "Added cashflow");
-						} catch(NumberFormatException nf) {
-							Toast.makeText(getApplicationContext(), R.string.bad_amount,
-									Toast.LENGTH_SHORT).show();
+							if (endDate != null) {
+								cf = new CashFlow(-1, concept.getText()
+										.toString(), Float.valueOf(amount
+										.getText().toString()), c, date
+										.getTime(), endDate.getTime(), p, mov);
+							} else {
+								cf = new CashFlow(-1, concept.getText()
+										.toString(), Float.valueOf(amount
+										.getText().toString()), c, date
+										.getTime(), null, p, mov);
+							}
+							cashServ.add(cf);
+							Log.i(TAG, "Added cashflow");
+						} catch (NumberFormatException nf) {
+							Toast.makeText(getApplicationContext(),
+									R.string.bad_amount, Toast.LENGTH_SHORT)
+									.show();
 							return;
 						}
 
-						
 						Toast.makeText(getApplicationContext(), R.string.added,
 								Toast.LENGTH_SHORT).show();
 					} catch (DuplicateEntryException e) {
