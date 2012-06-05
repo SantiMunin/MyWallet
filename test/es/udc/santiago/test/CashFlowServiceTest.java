@@ -118,10 +118,9 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		assertFalse(this.service.exists(c));
 	}
 	
-	public void testGetWithFilter() {
+	public void testGetWithFilter() throws DuplicateEntryException {
 		Calendar day1 = new GregorianCalendar(2012, 5, 27);
 		Calendar day2 = new GregorianCalendar(2012, 5, 25);
-		try {
 			CashFlow cf = new CashFlow(-1, "Income", (float) 2000,
 					new Category(id), day1.getTime(), null, Period.ONCE,
 					MovementType.INCOME);
@@ -152,38 +151,32 @@ public class CashFlowServiceTest extends AndroidTestCase {
 					this.service.getAllWithFilter(day1, Period.YEARLY, null,
 							null).size());
 			assertEquals(
-					1,
-					this.service.getAllWithFilter(null, null,
+					0,
+					this.service.getAllWithFilter(day1, Period.MONTHLY,
 							MovementType.INCOME, null).size());
 			assertEquals(
 					3,
-					this.service.getAllWithFilter(null, null,
+					this.service.getAllWithFilter(day1, Period.YEARLY,
 							MovementType.SPEND, null).size());
 			assertEquals(
 					3,
-					this.service.getAllWithFilter(null, Period.YEARLY,
+					this.service.getAllWithFilter(day1, Period.YEARLY,
 							MovementType.SPEND, null).size());
 			assertEquals(
 					3,
-					this.service.getAllWithFilter(null, Period.YEARLY,
+					this.service.getAllWithFilter(day1, Period.YEARLY,
 							MovementType.SPEND, null).size());
 			assertEquals(
 					1,
-					this.service.getAllWithFilter(day2, null,
-							MovementType.SPEND, new Category(id2)).size());
+					this.service.getAllWithFilter(day1, Period.YEARLY,
+							MovementType.SPEND, new Category(id3)).size());
 			assertEquals(
 					1,
-					this.service.getAllWithFilter(day2, null,
+					this.service.getAllWithFilter(day2, Period.YEARLY,
 							MovementType.SPEND, new Category(id2)).size());
 			assertEquals(
 					0,
 					this.service.getAllWithFilter(day1, Period.ONCE,
 							MovementType.SPEND, new Category(id2)).size());
-			
-
-		} catch (DuplicateEntryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 }

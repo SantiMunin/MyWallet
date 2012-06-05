@@ -3,12 +3,13 @@ package es.udc.santiago.model.facade;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 
 import es.udc.santiago.model.backend.CashFlowVO;
@@ -69,7 +70,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		try {
 			list = this.cashDao.queryForAll();
 			List<CashFlow> res = new ArrayList<CashFlow>();
-			for (CashFlowVO cashFlowVO : list) {		
+			for (CashFlowVO cashFlowVO : list) {
 				res.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
 			}
 			return res;
@@ -127,73 +128,119 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * 
 	 * @param cat
 	 *            Category.
-	 * @return A filtered list of cashflows.
+	 * @return A filtered list of cashflows. Empty list if period or start are null.
 	 */
 	public List<CashFlow> getAllWithFilter(Calendar start, Period period,
 			MovementType type, Category cat) {
 		List<CashFlow> result = new ArrayList<CashFlow>();
-		if ((start == null || period == null) && type == null && cat == null) {
+		if ((start == null || period == null)) {
 			return result;
 		}
-		QueryBuilder<CashFlowVO, Long> qb = this.cashDao.queryBuilder();
 		try {
-			Where<CashFlowVO, Long> where = qb.where();
-			boolean needAnd = false;
-			if (cat != null) {
-				if (needAnd) {
-					where.and();
-				}
-				where.eq("category_id", cat.getId());
-				needAnd = true;
+			Calendar end = GregorianCalendar.getInstance();
+			/*if (start == null) {
+				return getAllFiltered(null, null, null, type, cat);
+			}*/
+			end.setTime(start.getTime());
+			/*if (period == null) {
+				return getAllFiltered(start, end, period, type, cat);
+			}*/
+			if (period == Period.ONCE) {
+				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
-			if (type != null) {
-				if (needAnd) {
-					where.and();
-				}
-				where.eq("movType", type.getValue());
-				needAnd = true;
+			// Gets monthly movements
+			if (period == Period.MONTHLY) {
+				// Set first and last days of the month
+				start.set(Calendar.DATE, 1);
+				end.set(Calendar.DATE,
+						end.getActualMaximum(Calendar.DAY_OF_MONTH));
+				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
+				result.addAll(getAllFiltered(start, end, Period.MONTHLY, type,
+						cat));
 			}
-			if (start != null && period != null) {
-				if (needAnd) {
-					where.and();
-				}
-				Calendar dayStart = Calendar.getInstance();
-				Calendar dayEnd = Calendar.getInstance();
-				dayStart.setTime(start.getTime());
-				dayEnd.setTime(start.getTime());
-			
-				if (period == Period.MONTHLY) {
-					//Set first and last days of the month
-					dayStart.set(Calendar.DATE, 1);
-					dayEnd.set(Calendar.DATE,dayEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
-				}
-				if (period == Period.YEARLY) {
-					//Set first and last days of the month
-					dayStart.set(Calendar.DATE, 1);
-					dayStart.set(Calendar.MONTH, Calendar.JANUARY);
-					dayEnd.set(Calendar.MONTH, Calendar.DECEMBER);
-					dayEnd.set(Calendar.DATE,dayEnd.getActualMaximum(Calendar.DAY_OF_MONTH));
-				}
-				dayStart.set(Calendar.MILLISECOND, 0);
-				dayStart.set(Calendar.SECOND, 0);
-				dayStart.set(Calendar.MINUTE, 0);
-				dayStart.set(Calendar.HOUR_OF_DAY, 0);
-				dayEnd.set(Calendar.MILLISECOND, 999);
-				dayEnd.set(Calendar.SECOND, 59);
-				dayEnd.set(Calendar.MINUTE, 59);
-				dayEnd.set(Calendar.HOUR_OF_DAY, 23);
-
-				where.between("date", dayStart.getTime(), dayEnd.getTime());
-				where.and();
-				where.between("period", Period.ONCE.getCode(), period.getCode());
-				needAnd = true;
-			}
-			List<CashFlowVO> dbResult = this.cashDao.query(qb.prepare());
-			for (CashFlowVO cashFlowVO : dbResult) {
-				result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
+			// Gets yearly and monthly*12 movements
+			if (period == Period.YEARLY) {
+				// Set first and last days of the month
+				start.set(Calendar.DATE, 1);
+				start.set(Calendar.MONTH, Calendar.JANUARY);
+				end.set(Calendar.MONTH, Calendar.DECEMBER);
+				end.set(Calendar.DATE,
+						end.getActualMaximum(Calendar.DAY_OF_MONTH));
+				result.addAll(getAllFiltered(start, end, Period.YEARLY, type,
+						cat));
+				result.addAll(getAllFiltered(start, end, Period.MONTHLY, type,
+						cat));
+				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
 		} catch (SQLException e) {
 			return null;
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param start
+	 *            Start day.
+	 * @param end
+	 *            End day.
+	 * 
+	 * @param period
+	 *            Period (daily, monthly or yearly).
+	 * @param type
+	 *            CashFlow type (spend or income).
+	 * 
+	 * @param cat
+	 *            Category.
+	 * @return A filtered list of cashflows.
+	 * @throws SQLException
+	 */
+	private List<CashFlow> getAllFiltered(Calendar start, Calendar end,
+			Period period, MovementType type, Category cat) throws SQLException {
+		Where<CashFlowVO, Long> where = cashDao.queryBuilder().where();
+		boolean needAnd = false;
+		if (cat != null) {
+			if (needAnd) {
+				where.and();
+			}
+			where.eq("category_id", cat.getId());
+			needAnd = true;
+		}
+		if (type != null) {
+			if (needAnd) {
+				where.and();
+			}
+			where.eq("movType", type.getValue());
+			needAnd = true;
+		}
+		if (start != null) {
+			if (needAnd) {
+				where.and();
+			}
+			start.set(Calendar.MILLISECOND, 0);
+			start.set(Calendar.SECOND, 0);
+			start.set(Calendar.MINUTE, 0);
+			start.set(Calendar.HOUR_OF_DAY, 0);
+			end.set(Calendar.MILLISECOND, 999);
+			end.set(Calendar.SECOND, 59);
+			end.set(Calendar.MINUTE, 59);
+			end.set(Calendar.HOUR_OF_DAY, 23);
+
+			where.between("date", start.getTime(), end.getTime());
+			
+			needAnd = true;
+
+		}
+		if (period != null) {
+			if (needAnd) {
+				where.and();
+			}
+			needAnd = true;
+			where.eq("period", period.getCode());
+		}
+		List<CashFlow> result = new LinkedList<CashFlow>();
+		for (CashFlowVO cashFlowVO : cashDao.query(where.prepare())) {
+			result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
 		}
 		return result;
 	}

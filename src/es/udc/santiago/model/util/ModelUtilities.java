@@ -61,14 +61,16 @@ public class ModelUtilities {
 		Log.d(TAG, "Writing date: " + iso8601Format.format(date));
 		return iso8601Format.format(date);
 	}
+
 	/**
 	 * Compare two dates without time fields.
+	 * 
 	 * @param d1
 	 * @param d2
 	 * @return
 	 */
 	public static boolean compareDates(Date d1, Date d2) {
-		Calendar c1,c2;
+		Calendar c1, c2;
 		c1 = new GregorianCalendar();
 		c2 = new GregorianCalendar();
 		if (d1 == null) {
@@ -85,9 +87,12 @@ public class ModelUtilities {
 			return false;
 		return c1.get(Calendar.DAY_OF_MONTH) == c2.get(Calendar.DAY_OF_MONTH);
 	}
+
 	/**
 	 * Transforms the given CategoryVO to a public Category object.
-	 * @param cVO Value object.
+	 * 
+	 * @param cVO
+	 *            Value object.
 	 * @return
 	 */
 	public static Category valueObjectToPublicObject(CategoryVO cVO) {
@@ -99,8 +104,10 @@ public class ModelUtilities {
 		res.setName(cVO.getName());
 		return res;
 	}
+
 	/**
 	 * Transforms the given public category object to a value category object.
+	 * 
 	 * @param c
 	 * @return
 	 */
@@ -113,8 +120,10 @@ public class ModelUtilities {
 		res.setName(c.getName());
 		return res;
 	}
+
 	/**
 	 * Transforms a CashFlow into a CashFlowVO
+	 * 
 	 * @param c
 	 * @return
 	 */
@@ -130,11 +139,16 @@ public class ModelUtilities {
 		res.setEndDate(c.getEndDate());
 		res.setMovType(MovementType.getFromCode(c.getMovType()));
 		res.setPeriod(Period.getFromCode(c.getPeriod()));
-		res.setCategory(new Category(c.getCategory().getId(), c.getCategory().getName()));
+		if (c.getCategory() != null) {
+			res.setCategory(new Category(c.getCategory().getId(), c
+					.getCategory().getName()));
+		}
 		return res;
 	}
+
 	/**
 	 * Transforms a CashFlowVO into a CashFlow
+	 * 
 	 * @param c
 	 * @return
 	 */
@@ -153,8 +167,10 @@ public class ModelUtilities {
 		res.setCategory(new CategoryVO(c.getCategory().getId()));
 		return res;
 	}
+
 	/**
 	 * Sorts a Map of <String, Float> entries.
+	 * 
 	 * @param map
 	 * @return Sorted map.
 	 */

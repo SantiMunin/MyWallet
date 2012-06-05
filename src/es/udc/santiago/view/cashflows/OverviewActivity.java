@@ -337,18 +337,9 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				}
 			}
 			ViewUtils.printAmount(getApplicationContext(), incomes, totalIncomes);
-			ViewUtils.printAmount(getApplicationContext(), spends, totalSpends);
-			/*incomes.setText("+" + String.valueOf(totalIncomes));
-			spends.setText("-" + String.valueOf(totalSpends));*/
+			ViewUtils.printAmount(getApplicationContext(), spends, -totalSpends);
 			totalBalance = totalIncomes - totalSpends;
 			ViewUtils.printAmount(getApplicationContext(), balance, totalBalance);
-			/*if (totalBalance < 0) {
-				balance.setText(String.valueOf(totalBalance));
-				balance.setTextColor(getResources().getColor(R.color.red));
-			} else {
-				balance.setText("+" + String.valueOf(totalBalance));
-				balance.setTextColor(getResources().getColor(R.color.green));
-			}*/
 			setTop5Categories(top5type);
 		}
 	}

@@ -7,7 +7,7 @@ package es.udc.santiago.model.facade;
  * 
  */
 public enum MovementType {
-	SPEND(0), INCOME(1);
+	SPEND(1), INCOME(0);
 
 	private MovementType(int value) {
 		this.value = value;
@@ -35,9 +35,9 @@ public enum MovementType {
 	public static MovementType getFromCode(int code) {
 		switch (code) {
 		case 0:
-			return MovementType.SPEND;
-		case 1:
 			return MovementType.INCOME;
+		case 1:
+			return MovementType.SPEND;
 		default:
 			return null;
 		}
