@@ -128,7 +128,8 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * 
 	 * @param cat
 	 *            Category.
-	 * @return A filtered list of cashflows. Empty list if period or start are null.
+	 * @return A filtered list of cashflows. Empty list if period or start are
+	 *         null.
 	 */
 	public List<CashFlow> getAllWithFilter(Calendar start, Period period,
 			MovementType type, Category cat) {
@@ -138,13 +139,15 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		}
 		try {
 			Calendar end = GregorianCalendar.getInstance();
-			/*if (start == null) {
-				return getAllFiltered(null, null, null, type, cat);
-			}*/
+			/*
+			 * if (start == null) { return getAllFiltered(null, null, null,
+			 * type, cat); }
+			 */
 			end.setTime(start.getTime());
-			/*if (period == null) {
-				return getAllFiltered(start, end, period, type, cat);
-			}*/
+			/*
+			 * if (period == null) { return getAllFiltered(start, end, period,
+			 * type, cat); }
+			 */
 			if (period == Period.ONCE) {
 				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
@@ -213,24 +216,6 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			where.eq("movType", type.getValue());
 			needAnd = true;
 		}
-		if (start != null) {
-			if (needAnd) {
-				where.and();
-			}
-			start.set(Calendar.MILLISECOND, 0);
-			start.set(Calendar.SECOND, 0);
-			start.set(Calendar.MINUTE, 0);
-			start.set(Calendar.HOUR_OF_DAY, 0);
-			end.set(Calendar.MILLISECOND, 999);
-			end.set(Calendar.SECOND, 59);
-			end.set(Calendar.MINUTE, 59);
-			end.set(Calendar.HOUR_OF_DAY, 23);
-
-			where.between("date", start.getTime(), end.getTime());
-			
-			needAnd = true;
-
-		}
 		if (period != null) {
 			if (needAnd) {
 				where.and();
@@ -238,10 +223,32 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			needAnd = true;
 			where.eq("period", period.getCode());
 		}
+		if (period != null && period != Period.YEARLY) {
+			if (start != null) {
+				if (needAnd) {
+					where.and();
+				}
+				start.set(Calendar.MILLISECOND, 0);
+				start.set(Calendar.SECOND, 0);
+				start.set(Calendar.MINUTE, 0);
+				start.set(Calendar.HOUR_OF_DAY, 0);
+				end.set(Calendar.MILLISECOND, 999);
+				end.set(Calendar.SECOND, 59);
+				end.set(Calendar.MINUTE, 59);
+				end.set(Calendar.HOUR_OF_DAY, 23);
+
+				where.between("date", start.getTime(), end.getTime());
+
+				needAnd = true;
+
+			}
+		}
 		List<CashFlow> result = new LinkedList<CashFlow>();
 		for (CashFlowVO cashFlowVO : cashDao.query(where.prepare())) {
 			result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
 		}
+		where.clear();
+		cashDao.queryBuilder().clear();
 		return result;
 	}
 }

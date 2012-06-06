@@ -2,6 +2,7 @@ package es.udc.santiago.view.cashflows;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			day = new GregorianCalendar(year, monthOfYear, dayOfMonth);
 			dayButton.setText(DateFormat.getDateInstance()
 					.format(day.getTime()));
-			new GetMovementsTask().execute((Void) null);
+			new GetMovementsTask().execute(day);
 		}
 	};
 
@@ -110,7 +111,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				if (tabId.equals("yearly")) {
 					period = Period.YEARLY;
 				}
-				new GetMovementsTask().execute((Void) null);
+				new GetMovementsTask().execute(day);
 			}
 		});
 		mTabHost.setCurrentTab(1);
@@ -151,7 +152,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		incomes = (TextView) findViewById(R.id.incomes_daily);
 		spends = (TextView) findViewById(R.id.spends_daily);
 		balance = (TextView) findViewById(R.id.balance_daily);
-		new GetMovementsTask().execute((Void) null);
+		new GetMovementsTask().execute(day);
 	}
 
 	/**
@@ -284,11 +285,16 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	 * 
 	 */
 	private class GetMovementsTask extends
-			AsyncTask<Void, Void, List<CashFlow>> {
-
+			AsyncTask<Calendar, Void, List<CashFlow>> {
+		
 		@Override
-		protected List<CashFlow> doInBackground(Void... params) {
-			Log.i(TAG, "Fetching movements");
+		protected List<CashFlow> doInBackground(Calendar... params) {
+			if (params.length == 0) {
+				return new ArrayList<CashFlow>();
+			}
+			Calendar day = GregorianCalendar.getInstance();
+			day.setTime(params[0].getTime());
+			Log.i(TAG, "Fetching movements day: "+day.getTime().toGMTString()+" period: "+period.toString());
 			return cashService.getAllWithFilter(day, period, null, null);
 		}
 
