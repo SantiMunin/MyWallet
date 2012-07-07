@@ -1,3 +1,20 @@
+/*
+MyWallet is an android application which helps users to manager their personal accounts.
+Copyright (C) 2012 Santiago Munin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.   
+*/
 package es.udc.santiago.view.cashflows;
 
 import java.sql.SQLException;
@@ -13,6 +30,7 @@ import java.util.Map.Entry;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,7 +54,7 @@ import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
 import es.udc.santiago.model.util.ModelUtilities;
-import es.udc.santiago.view.ViewUtils;
+import es.udc.santiago.view.utils.ViewUtils;
 
 /**
  * Movements overview (daily, monthly or yearly).
@@ -152,6 +170,20 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		incomes = (TextView) findViewById(R.id.incomes_daily);
 		spends = (TextView) findViewById(R.id.spends_daily);
 		balance = (TextView) findViewById(R.id.balance_daily);
+		((Button) findViewById(R.id.button_view_all_movements))
+				.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent i = new Intent(getApplicationContext(),
+								ViewAllMovementsActivity.class);
+						Bundle b = new Bundle();
+						b.putLong("startDayMilliseconds", day.getTimeInMillis());
+						b.putInt("periodCode", period.getCode());
+						i.putExtras(b);
+						startActivity(i);
+					}
+				});
 		new GetMovementsTask().execute(day);
 	}
 
@@ -257,7 +289,8 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			 * getResources().getColor(R.color.green); }
 			 */
 			label.setText(cat);
-			ViewUtils.printAmount(getApplicationContext(), content, amount);
+			ViewUtils.printAmount(getApplicationContext(), content, amount,
+					true);
 			/*
 			 * content.setText(symbol + amount); content.setTextColor(color);
 			 */
@@ -286,7 +319,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	 */
 	private class GetMovementsTask extends
 			AsyncTask<Calendar, Void, List<CashFlow>> {
-		
+
 		@Override
 		protected List<CashFlow> doInBackground(Calendar... params) {
 			if (params.length == 0) {
@@ -294,7 +327,8 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			}
 			Calendar day = GregorianCalendar.getInstance();
 			day.setTime(params[0].getTime());
-			Log.i(TAG, "Fetching movements day: "+day.getTime().toGMTString()+" period: "+period.toString());
+			Log.i(TAG, "Fetching movements day: " + day.getTime().toGMTString()
+					+ " period: " + period.toString());
 			return cashService.getAllWithFilter(day, period, null, null);
 		}
 
@@ -311,7 +345,12 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 
 			for (CashFlow cashFlow : result) {
 				float amount = cashFlow.getAmount();
-				String catName = cashFlow.getCategory().getName();
+				String catName;
+				if (cashFlow.getCategory() != null) {
+					catName = cashFlow.getCategory().getName();
+				} else {
+					catName = getString(R.string.other);
+				}
 				if (cashFlow.getMovType() == MovementType.SPEND) {
 					totalSpends += amount;
 					// Adds category data
@@ -342,10 +381,13 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 					}
 				}
 			}
-			ViewUtils.printAmount(getApplicationContext(), incomes, totalIncomes);
-			ViewUtils.printAmount(getApplicationContext(), spends, -totalSpends);
+			ViewUtils.printAmount(getApplicationContext(), incomes,
+					totalIncomes, true);
+			ViewUtils.printAmount(getApplicationContext(), spends,
+					-totalSpends, true);
 			totalBalance = totalIncomes - totalSpends;
-			ViewUtils.printAmount(getApplicationContext(), balance, totalBalance);
+			ViewUtils.printAmount(getApplicationContext(), balance,
+					totalBalance, true);
 			setTop5Categories(top5type);
 		}
 	}

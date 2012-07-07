@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+MyWallet is an android application which helps users to manager their personal accounts.
+Copyright (C) 2012 Santiago Munin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
 
     <string name="app_name">MyWallet</string>
@@ -28,7 +45,7 @@
     <string name="once">Once</string>
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>
-    <string name="yearly">Yearly</string>
+    <string name="yearly">Annual</string>
     <string name="today">Today</string>
     <string name="indefinite">Indefinite</string>
     <string name="categories">Categories</string>
@@ -39,14 +56,20 @@
     <string name="year">Year</string>
     <string name="movementsoverview">Movements overview</string>
     <string name="topcat">Top categories</string>
-	<string name="new_category">New&#8230;</string>
-	<string name="new_category_dialog">Type new category</string>
-	<string name="not_category_selected">A category must be selected</string>
-	<string name="endDate_before_date">The ending date must be after the operation date</string>
-	<string name="bad_amount">You did not provide a correct amount</string>
-	<string name="currency">Currency</string>
-	<string name="options">Options</string>
+    <string name="new_category">New&#8230;</string>
+    <string name="new_category_dialog">Type new category</string>
+    <string name="not_category_selected">A category must be selected</string>
+    <string name="endDate_before_date">The ending date must be after the operation date</string>
+    <string name="bad_amount">You did not provide a correct amount</string>
+    <string name="currency">Currency</string>
+    <string name="options">Options</string>
+    <string name="other">Other</string>
+    <string name="view_all_movements">View all movements</string>
+    <string name="list_empty_message">There aren\'t movements</string>
+	<string name="ends">Ends</string>
     <color name="green">#00FF00</color>
+    <color name="light_green">#1AAB48</color>
     <color name="red">#FF0000</color>
+    <color name="light_red">#FF8888</color>
 
 </resources>

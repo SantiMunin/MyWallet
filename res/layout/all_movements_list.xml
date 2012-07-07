@@ -15,12 +15,21 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
-<resources>
-    <style name="AddOpTableRow">
-        <item name="android:layout_marginBottom">5dp</item>
-    </style>
-    <style name="AddOpSpinner">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-</resources>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+         android:orientation="vertical"
+         android:layout_width="fill_parent"
+         android:layout_height="fill_parent">
+
+     <ListView android:id="@android:id/list"
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               />
+
+     <TextView android:id="@android:id/empty"
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               android:textSize="20dp"
+               android:gravity="center"
+               android:text="@string/list_empty_message"/>
+ </LinearLayout>
+ 

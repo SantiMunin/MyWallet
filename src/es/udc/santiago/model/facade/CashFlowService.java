@@ -1,8 +1,26 @@
+/*
+MyWallet is an android application which helps users to manager their personal accounts.
+Copyright (C) 2012 Santiago Munin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.   
+*/
 package es.udc.santiago.model.facade;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -75,6 +93,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			}
 			return res;
 		} catch (SQLException e) {
+			Log.e(TAG, e.getMessage());
 			return null;
 		}
 	}
@@ -139,15 +158,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		}
 		try {
 			Calendar end = GregorianCalendar.getInstance();
-			/*
-			 * if (start == null) { return getAllFiltered(null, null, null,
-			 * type, cat); }
-			 */
 			end.setTime(start.getTime());
-			/*
-			 * if (period == null) { return getAllFiltered(start, end, period,
-			 * type, cat); }
-			 */
 			if (period == Period.ONCE) {
 				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
@@ -223,26 +234,28 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			needAnd = true;
 			where.eq("period", period.getCode());
 		}
-		if (period != null && period != Period.YEARLY) {
+		
 			if (start != null) {
 				if (needAnd) {
 					where.and();
 				}
-				start.set(Calendar.MILLISECOND, 0);
-				start.set(Calendar.SECOND, 0);
-				start.set(Calendar.MINUTE, 0);
-				start.set(Calendar.HOUR_OF_DAY, 0);
+				if (period != null && period == Period.YEARLY) {
+					start.setTime(new Date(0));
+				} else {
+					start.set(Calendar.MILLISECOND, 0);
+					start.set(Calendar.SECOND, 0);
+					start.set(Calendar.MINUTE, 0);
+					start.set(Calendar.HOUR_OF_DAY, 0);
+				}
 				end.set(Calendar.MILLISECOND, 999);
 				end.set(Calendar.SECOND, 59);
 				end.set(Calendar.MINUTE, 59);
 				end.set(Calendar.HOUR_OF_DAY, 23);
-
 				where.between("date", start.getTime(), end.getTime());
-
+				where.and();
+				where.ge("endDate", end.getTime());
 				needAnd = true;
-
 			}
-		}
 		List<CashFlow> result = new LinkedList<CashFlow>();
 		for (CashFlowVO cashFlowVO : cashDao.query(where.prepare())) {
 			result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
