@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
         android:label="@string/app_name" >
         <uses-library android:name="android.test.runner" />
 
-        <activity android:name=".view.MainActivity" >
+        <activity android:name=".view.cashflows.OverviewActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,8 +44,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
         <activity android:name=".view.categories.ManageCategoriesActivity" />
         <activity android:name=".view.categories.EditCategoryActivity" />
         <activity android:name=".view.cashflows.AddOperationActivity" />
-        <activity android:name=".view.OptionsActivity" />
-        <activity android:name=".view.cashflows.OverviewActivity" />
         <activity android:name=".view.cashflows.ViewAllMovementsActivity"/>
     </application>
 

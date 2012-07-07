@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.view.cashflows;
 
 import java.sql.SQLException;
@@ -28,12 +28,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -54,6 +61,7 @@ import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
 import es.udc.santiago.model.util.ModelUtilities;
+import es.udc.santiago.view.categories.ManageCategoriesActivity;
 import es.udc.santiago.view.utils.ViewUtils;
 
 /**
@@ -65,6 +73,7 @@ import es.udc.santiago.view.utils.ViewUtils;
 public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	private static final String TAG = "OverviewActivity";
 	private static final int DATE_PICKER_DIALOG = 1;
+	private static final int DIALOG_SELECT_CURRENCY = 2;
 	private static final int TOP_CATEGORIES_MAX = 5;
 
 	private DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
@@ -187,8 +196,60 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		new GetMovementsTask().execute(day);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.overview_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.add_operation:
+			startActivity(new Intent(getApplicationContext(),
+					AddOperationActivity.class));
+			return true;
+		case R.id.manage_categories:
+			startActivity(new Intent(getApplicationContext(),
+					ManageCategoriesActivity.class));
+			return true;
+		case R.id.change_currency:
+			showDialog(DIALOG_SELECT_CURRENCY);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
 	/**
-	 * Date picker's dialogs
+	 * Builds a select currency dialog.
+	 * 
+	 * @return Dialog
+	 */
+	private Dialog getSelectCurrencyDialog() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(getString(R.string.select_currency));
+		builder.setItems(R.array.currency,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						Editor prefs = PreferenceManager
+								.getDefaultSharedPreferences(
+										getApplicationContext()).edit();
+						String currency[] = getResources().getStringArray(
+								R.array.currency);
+						prefs.putString("currency", currency[item]);
+						if (prefs.commit()) {
+							Log.i(TAG, "Currency changed to: " + currency[item]);
+							new GetMovementsTask().execute(day);
+						}
+					}
+				});
+		return builder.create();
+	}
+
+	/**
+	 * Dialogs
 	 */
 	protected Dialog onCreateDialog(int id) {
 		Calendar d = GregorianCalendar.getInstance();
@@ -198,7 +259,10 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			return new DatePickerDialog(this, dateListener,
 					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
 					d.get(Calendar.DATE));
+		case DIALOG_SELECT_CURRENCY:
+			return getSelectCurrencyDialog();
 		}
+
 		return null;
 	}
 

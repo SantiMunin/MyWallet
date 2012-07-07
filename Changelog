@@ -1,3 +1,19 @@
 2012-07-08	Santiago Munin <burning1@gmail.com>
+	* .gitignore: res/ is no longer ignore (ignoring it was a mistake).
+	* AndroidManifest.xml: Changed main activity and removed old activities.
+	* lint.xml: Deleted.
+	* res/drawable-mdpi/add_operation.png: Added new icon.
+	* res/drawable-mdpi/euro_currency_sign.png: Added new icon.
+	* res/drawable-mdpi/manage_categories.png: Added new icon.
+	* res/layout/main.xml: Deleted.
+	* src/es/udc/santiago/view/MainActivity.java: Deleted, this activity is no longer necessary.
+	* res/layout/options.xml: Deleted.
+	* src/es/udc/santiago/view/OptionsActivity.java: Deleted, this activity is no longer necessary.
+	* res/layout/movements_overview.xml: Added license.
+	* res/menu/overview_menu.xml: Definition of the movements overview's menu.
+	* res/values/strings.xml: Added new entries and made some changes.
+	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Added menu.
+
+2012-07-08	Santiago Munin <burning1@gmail.com>
 	* Added .gitignore and Changelog files.
 	* New activity which allow users to view all movements of a period.
