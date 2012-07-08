@@ -20,6 +20,7 @@ package es.udc.santiago.model.facade;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -181,8 +182,24 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 						end.getActualMaximum(Calendar.DAY_OF_MONTH));
 				result.addAll(getAllFiltered(start, end, Period.YEARLY, type,
 						cat));
-				result.addAll(getAllFiltered(start, end, Period.MONTHLY, type,
-						cat));
+				List<CashFlow> monthlyMovements = getAllFiltered(start, end,
+						Period.MONTHLY, type, cat);
+				for (CashFlow cashFlow : monthlyMovements) {
+					for (int i = 0; i < 12; i++) {
+						CashFlow c = new CashFlow();
+						c.setAmount(cashFlow.getAmount());
+						c.setCategory(cashFlow.getCategory());
+						c.setConcept(cashFlow.getConcept());
+						c.setEndDate(cashFlow.getEndDate());
+						c.setId(c.getId());
+						c.setMovType(cashFlow.getMovType());
+						c.setPeriod(cashFlow.getPeriod());
+						Date date = (Date) cashFlow.getDate().clone();
+						date.setMonth(i);
+						c.setDate(date);
+						result.add(c);
+					}
+				}
 				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
 		} catch (SQLException e) {
@@ -240,13 +257,6 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			if (needAnd) {
 				where.and();
 			}
-			/*
-			 * if (period != null && period == Period.YEARLY) {
-			 * start.setTime(new Date(0)); } else {
-			 * start.set(Calendar.MILLISECOND, 0); start.set(Calendar.SECOND,
-			 * 0); start.set(Calendar.MINUTE, 0);
-			 * start.set(Calendar.HOUR_OF_DAY, 0); }
-			 */
 			start.set(Calendar.MILLISECOND, 0);
 			start.set(Calendar.SECOND, 0);
 			start.set(Calendar.MINUTE, 0);

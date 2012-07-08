@@ -14,8 +14,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.view.utils;
+
+import java.text.NumberFormat;
+import java.util.Currency;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -44,26 +47,18 @@ public class ViewUtils {
 	 */
 	public static void printAmount(Context context, TextView text,
 			float amount, boolean changeTextColor) {
-		//TODO localization of amounts
+		// TODO localization of amounts
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(context);
-		String currency = prefs.getString("currency", "€");
+		String currency = prefs.getString("currency", NumberFormat
+				.getCurrencyInstance().getCurrency().getCurrencyCode());
 		String content;
 		// Does not print decimals if is not necessary.
-		if (amount % 1.0 == 0) {
-			content = String.valueOf(Math.abs((int) amount));
-		} else {
-			content = String.valueOf(Math.abs(amount));
-		}
-
 		int color = context.getResources().getColor(R.color.green);
-		if (currency.equals("$")) {
-			content = "$" + content;
-		} else {
-			content = content + " " + currency;
-		}
+		NumberFormat nf = NumberFormat.getCurrencyInstance();
+		nf.setCurrency(Currency.getInstance(currency));
+		content = nf.format(amount);
 		if (amount < 0) {
-			content = "-" + content;
 			color = context.getResources().getColor(R.color.red);
 		}
 		text.setText(content);

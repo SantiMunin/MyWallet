@@ -1,4 +1,10 @@
 2012-07-08	Santiago Munin <burning1@gmail.com>
+	* AndroidManifest.xml: Fixed a comment.
+	* src/es/udc/santiago/model/facade/CashFlowService.java: Now the yearly movements filter returns monthly movements x 12 (one per month)
+	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Fixed the currency select.
+	* src/es/udc/santiago/view/utils/ViewUtils.java: Improved cash printing.
+
+2012-07-08	Santiago Munin <burning1@gmail.com>
 	* res/raw/ormlite_config.txt: Deleted (unnecessary file).
 	* src/es/udc/santiago/model/facade/CashFlowService.java: Fixed #4 (wrong query).
 	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Now the data is refreshed onResume.

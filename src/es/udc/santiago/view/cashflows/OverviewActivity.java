@@ -242,11 +242,21 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 						Editor prefs = PreferenceManager
 								.getDefaultSharedPreferences(
 										getApplicationContext()).edit();
-						String currency[] = getResources().getStringArray(
-								R.array.currency);
-						prefs.putString("currency", currency[item]);
+						String currencyCode = "";
+						switch (item) {
+						case 0:
+							currencyCode = "EUR";
+							break;
+						case 1:
+							currencyCode = "USD";
+							break;
+						case 2:
+							currencyCode = "JPY";
+							break;
+						}
+						prefs.putString("currency", currencyCode);
 						if (prefs.commit()) {
-							Log.i(TAG, "Currency changed to: " + currency[item]);
+							Log.i(TAG, "Currency changed to: " + currencyCode);
 							new GetMovementsTask().execute(day);
 						}
 					}
@@ -353,17 +363,9 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		label = (TextView) findViewById(textViewId1);
 		content = (TextView) findViewById(textViewId2);
 		if (amount != null) {
-			/*
-			 * int color = getResources().getColor(R.color.red); String symbol =
-			 * ""; if (!amount.startsWith("-")) { symbol = "+"; color =
-			 * getResources().getColor(R.color.green); }
-			 */
 			label.setText(cat);
 			ViewUtils.printAmount(getApplicationContext(), content, amount,
 					true);
-			/*
-			 * content.setText(symbol + amount); content.setTextColor(color);
-			 */
 		} else {
 			label.setText("");
 			content.setText("");

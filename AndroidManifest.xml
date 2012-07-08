@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
     <uses-sdk
         android:minSdkVersion="7"
         android:targetSdkVersion="7" />
-    <!-- Para poder ejecutar test JUnit con Android -->
+    <!-- JUnit -->
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:label="Unit tests"
