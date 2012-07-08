@@ -14,13 +14,12 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.model.facade;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -138,16 +137,16 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * if you want avoid it.
 	 * 
 	 * @param start
-	 *            Start day.
+	 *            Start day, required.
 	 * 
 	 * @param period
-	 *            Period (daily, monthly or yearly).
+	 *            Period (daily, monthly or yearly), required.
 	 * @param type
 	 *            CashFlow type (spend or income).
 	 * 
 	 * @param cat
 	 *            Category.
-	 * @return A filtered list of cashflows. Empty list if period or start are
+	 * @return A filtered list of cashflows, empty list if period or start are
 	 *         null.
 	 */
 	public List<CashFlow> getAllWithFilter(Calendar start, Period period,
@@ -187,6 +186,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
 			}
 		} catch (SQLException e) {
+			Log.e(TAG, e.getMessage());
 			return null;
 		}
 		return result;
@@ -209,6 +209,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * @return A filtered list of cashflows.
 	 * @throws SQLException
 	 */
+	@SuppressWarnings("unchecked")
 	private List<CashFlow> getAllFiltered(Calendar start, Calendar end,
 			Period period, MovementType type, Category cat) throws SQLException {
 		Where<CashFlowVO, Long> where = cashDao.queryBuilder().where();
@@ -234,28 +235,36 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			needAnd = true;
 			where.eq("period", period.getCode());
 		}
-		
-			if (start != null) {
-				if (needAnd) {
-					where.and();
-				}
-				if (period != null && period == Period.YEARLY) {
-					start.setTime(new Date(0));
-				} else {
-					start.set(Calendar.MILLISECOND, 0);
-					start.set(Calendar.SECOND, 0);
-					start.set(Calendar.MINUTE, 0);
-					start.set(Calendar.HOUR_OF_DAY, 0);
-				}
-				end.set(Calendar.MILLISECOND, 999);
-				end.set(Calendar.SECOND, 59);
-				end.set(Calendar.MINUTE, 59);
-				end.set(Calendar.HOUR_OF_DAY, 23);
-				where.between("date", start.getTime(), end.getTime());
+
+		if (start != null) {
+			if (needAnd) {
 				where.and();
-				where.ge("endDate", end.getTime());
-				needAnd = true;
 			}
+			/*
+			 * if (period != null && period == Period.YEARLY) {
+			 * start.setTime(new Date(0)); } else {
+			 * start.set(Calendar.MILLISECOND, 0); start.set(Calendar.SECOND,
+			 * 0); start.set(Calendar.MINUTE, 0);
+			 * start.set(Calendar.HOUR_OF_DAY, 0); }
+			 */
+			start.set(Calendar.MILLISECOND, 0);
+			start.set(Calendar.SECOND, 0);
+			start.set(Calendar.MINUTE, 0);
+			start.set(Calendar.HOUR_OF_DAY, 0);
+			end.set(Calendar.MILLISECOND, 999);
+			end.set(Calendar.SECOND, 59);
+			end.set(Calendar.MINUTE, 59);
+			end.set(Calendar.HOUR_OF_DAY, 23);
+			where.between("date", start.getTime(), end.getTime());
+
+			if (period == Period.MONTHLY || period == Period.YEARLY) {
+				where.and(
+						where,
+						where.or(where.le("endDate", end.getTime()),
+								where.isNull("endDate")));
+			}
+			needAnd = true;
+		}
 		List<CashFlow> result = new LinkedList<CashFlow>();
 		for (CashFlowVO cashFlowVO : cashDao.query(where.prepare())) {
 			result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));

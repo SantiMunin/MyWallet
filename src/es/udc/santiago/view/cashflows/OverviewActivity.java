@@ -197,6 +197,12 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		new GetMovementsTask().execute(day);
+	}
+
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.overview_menu, menu);

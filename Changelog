@@ -1,4 +1,9 @@
 2012-07-08	Santiago Munin <burning1@gmail.com>
+	* res/raw/ormlite_config.txt: Deleted (unnecessary file).
+	* src/es/udc/santiago/model/facade/CashFlowService.java: Fixed #4 (wrong query).
+	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Now the data is refreshed onResume.
+
+2012-07-08	Santiago Munin <burning1@gmail.com>
 	* .gitignore: res/ is no longer ignore (ignoring it was a mistake).
 	* AndroidManifest.xml: Changed main activity and removed old activities.
 	* lint.xml: Deleted.
