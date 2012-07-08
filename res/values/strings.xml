@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="update">Update</string>
     <string name="id">Id</string>
     <string name="name">Name</string>
-    <string name="error_empty">You must provide not empty data.</string>
+    <string name="error_empty">Empty field</string>
     <string name="error_notExists">Couldn\'t found an item with the given id.</string>
     <string name="error_cat_alreadyExists">A category with that name already exists.</string>
     <string name="error_addingCashFlow">There was a problem adding the operation.</string>
@@ -58,7 +58,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="movementsoverview">Movements overview</string>
     <string name="topcat">Top categories</string>
     <string name="new_category">New&#8230;</string>
-    <string name="new_category_dialog">Type new category</string>
+    <string name="new_category_dialog">Type a new category</string>
     <string name="not_category_selected">A category must be selected</string>
     <string name="endDate_before_date">The ending date must be after the operation date</string>
     <string name="bad_amount">You did not provide a correct amount</string>
@@ -69,6 +69,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="list_empty_message">There aren\'t movements</string>
     <string name="ends">Ends</string>
     <string name="select_currency">Select currency</string>
+    <string name="from">From</string>
 
     <color name="green">#00FF00</color>
     <color name="light_green">#1AAB48</color>

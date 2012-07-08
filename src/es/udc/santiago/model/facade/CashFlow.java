@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.model.facade;
 
 import java.util.Date;
@@ -80,7 +80,6 @@ public class CashFlow {
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
-
 
 	public Period getPeriod() {
 		return period;
@@ -150,5 +149,19 @@ public class CashFlow {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	@Override
+	protected Object clone() {
+		CashFlow c = new CashFlow();
+		c.setAmount(this.amount);
+		c.setCategory(this.category);
+		c.setConcept(this.concept);
+		c.setDate(this.date);
+		c.setEndDate(this.endDate);
+		c.setId(this.id);
+		c.setMovType(this.movType);
+		c.setPeriod(period);
+		return c;
 	}
 }

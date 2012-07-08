@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+MyWallet is an android application which helps users to manager their personal accounts.
+Copyright (C) 2012 Santiago Munin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<resources>
+
+    <string name="app_name">MyWallet</string>
+    <string name="add">Añadir</string>
+    <string name="delete">Eliminar</string>
+    <string name="update">Actualizar</string>
+    <string name="id">Id</string>
+    <string name="name">Nombre</string>
+    <string name="error_empty">El campo está vacío</string>
+    <string name="error_notExists">No se ha encontrado ningún elemento correspondiente a la id proporcionada</string>
+    <string name="error_cat_alreadyExists">Ya existe una categoría con ese nombre</string>
+    <string name="error_addingCashFlow">Hubo un problema añadiendo el movimiento</string>
+    <string name="category">Categoría</string>
+    <string name="type">Tipo</string>
+    <string name="period">Período</string>
+    <string name="date">Fecha</string>
+    <string name="until">Hasta</string>
+    <string name="concept">Concepto</string>
+    <string name="movType">Tipo</string>
+    <string name="amount">Cantidad</string>
+    <string name="error_fieldsNotFilled">Hay campos obligatorios sin rellenar</string>
+    <string name="spend">Gasto</string>
+    <string name="spends">Gastos</string>
+    <string name="income">Ingreso</string>
+    <string name="incomes">Ingresos</string>
+    <string name="balance">Balance</string>
+    <string name="once">Único</string>
+    <string name="daily">Diario</string>
+    <string name="monthly">Mensual</string>
+    <string name="yearly">Anual</string>
+    <string name="today">Hoy</string>
+    <string name="indefinite">Indefinido</string>
+    <string name="categories">Categorías</string>
+    <string name="manage_categories">Administrar categorías</string>
+    <string name="add_cashflow">Añadir un movimiento</string>
+    <string name="added">Añadido</string>
+    <string name="day">Día</string>
+    <string name="month">Mes</string>
+    <string name="year">Año</string>
+    <string name="movementsoverview">Resumen de movimientos</string>
+    <string name="topcat">Top de categorías</string>
+    <string name="new_category">Nueva&#8230;</string>
+    <string name="new_category_dialog">Introduzca una nueva categoría</string>
+    <string name="not_category_selected">Debe seleccionarse una categoría</string>
+    <string name="endDate_before_date">La fecha límite debe de ser posterior a la inicial</string>
+    <string name="bad_amount">Cantidad incorrecta</string>
+    <string name="currency">Moneda</string>
+    <string name="options">Opciones</string>
+    <string name="other">Otros</string>
+    <string name="view_all_movements">Ver todos los movimientos</string>
+    <string name="list_empty_message">No hay movimientos</string>
+    <string name="ends">Finaliza</string>
+    <string name="select_currency">Seleccionar moneda</string>
+    <string name="from">Desde</string>
+
+    <color name="green">#00FF00</color>
+    <color name="light_green">#1AAB48</color>
+    <color name="red">#FF0000</color>
+    <color name="light_red">#FF8888</color>
+
+</resources>

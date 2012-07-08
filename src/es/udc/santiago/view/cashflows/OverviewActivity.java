@@ -115,13 +115,13 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 
 		mTabHost.addTab(mTabHost.newTabSpec("daily")
 				.setIndicator(getString(R.string.daily))
-				.setContent(R.id.dailytab));
+				.setContent(R.id.tab));
 		mTabHost.addTab(mTabHost.newTabSpec("monthly")
 				.setIndicator(getString(R.string.monthly))
-				.setContent(R.id.dailytab));
+				.setContent(R.id.tab));
 		mTabHost.addTab(mTabHost.newTabSpec("yearly")
 				.setIndicator(getString(R.string.yearly))
-				.setContent(R.id.dailytab));
+				.setContent(R.id.tab));
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -252,6 +252,9 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 							break;
 						case 2:
 							currencyCode = "JPY";
+							break;
+						case 3:
+							currencyCode = "GBP";
 							break;
 						}
 						prefs.putString("currency", currencyCode);

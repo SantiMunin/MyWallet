@@ -1,3 +1,17 @@
+2012-07-09	Santiago Munin <burning1@gmail.com>
+	* res/values-es/arrays.xml, 
+	  res/values-es/strings.xml: Spanish language.
+	* res/layout/add_operation.xml: UI changes.
+	* res/layout/movements_overview.xml: Id changed.
+	* res/values-es/arrays.xml,
+	  res/values/arrays.xml: Added GBP currency.
+	* res/values/strings.xml: Few changes.
+	* src/es/udc/santiago/model/facade/CashFlow.java: Added clone() method.
+	* src/es/udc/santiago/model/facade/CashFlowService.java: Fixed a bug which could show movements out of period.
+	* src/es/udc/santiago/view/cashflows/AddOperationActivity.java: UI control changes.
+	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Added GBP currency.
+	* src/es/udc/santiago/view/cashflows/ViewAllMovementsActivity.java: Time is not longer shown in date fields (only date).
+
 2012-07-08	Santiago Munin <burning1@gmail.com>
 	* AndroidManifest.xml: Fixed a comment.
 	* src/es/udc/santiago/model/facade/CashFlowService.java: Now the yearly movements filter returns monthly movements x 12 (one per month)

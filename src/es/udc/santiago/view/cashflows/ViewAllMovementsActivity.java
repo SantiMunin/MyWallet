@@ -137,8 +137,8 @@ public class ViewAllMovementsActivity extends
 					period = getString(R.string.yearly);
 				}
 				map.put("period", period);
-				DateFormat df = DateFormat.getDateTimeInstance(
-						DateFormat.SHORT, DateFormat.SHORT);
+				DateFormat df = DateFormat.getDateInstance(
+						DateFormat.SHORT);
 				map.put("date",
 						getString(R.string.date) + ": "
 								+ df.format(cashf.getDate()));

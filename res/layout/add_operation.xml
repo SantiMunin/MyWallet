@@ -117,7 +117,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
             style="@style/AddOpTableRow" >
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/label_date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/date" />
@@ -136,7 +136,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
             android:visibility="gone" >
 
             <TextView
-                android:id="@+id/addOp_endDateLabel"
+                android:id="@+id/label_endDate"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/until" />

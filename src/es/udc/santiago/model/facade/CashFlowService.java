@@ -185,19 +185,22 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 				List<CashFlow> monthlyMovements = getAllFiltered(start, end,
 						Period.MONTHLY, type, cat);
 				for (CashFlow cashFlow : monthlyMovements) {
+					Calendar periodStart = Calendar.getInstance();
+					periodStart.setTime(cashFlow.getDate());
+					Calendar periodEnd = Calendar.getInstance();
+					periodEnd.setTime(cashFlow.getEndDate());
+					//Checks what months movements are in period range
 					for (int i = 0; i < 12; i++) {
-						CashFlow c = new CashFlow();
-						c.setAmount(cashFlow.getAmount());
-						c.setCategory(cashFlow.getCategory());
-						c.setConcept(cashFlow.getConcept());
-						c.setEndDate(cashFlow.getEndDate());
-						c.setId(c.getId());
-						c.setMovType(cashFlow.getMovType());
-						c.setPeriod(cashFlow.getPeriod());
-						Date date = (Date) cashFlow.getDate().clone();
+						CashFlow c = (CashFlow) cashFlow.clone();
+						Date date = c.getDate();
 						date.setMonth(i);
 						c.setDate(date);
-						result.add(c);
+						Calendar movementDate = Calendar.getInstance();
+						movementDate.setTime(c.getDate());
+						if (movementInPeriod(periodStart, periodEnd,
+								movementDate)) {
+							result.add(c);
+						}
 					}
 				}
 				result.addAll(getAllFiltered(start, end, Period.ONCE, type, cat));
@@ -207,6 +210,47 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			return null;
 		}
 		return result;
+	}
+
+	/**
+	 * Checks if a monthly movement is valid in the given period.
+	 * 
+	 * @param periodStart
+	 *            Start of the period.
+	 * @param periodEnd
+	 *            End of the period (null if indefinite)
+	 * @param movementDate
+	 *            Date of the movement
+	 * @return if it's valid
+	 */
+	private boolean movementInPeriod(Calendar periodStart, Calendar periodEnd,
+			Calendar movementDate) {
+		periodStart.set(Calendar.DATE, 1);
+		periodStart.set(Calendar.MILLISECOND, 0);
+		periodStart.set(Calendar.SECOND, 0);
+		periodStart.set(Calendar.MINUTE, 0);
+		periodStart.set(Calendar.HOUR_OF_DAY, 0);
+		if (periodEnd != null) {
+			periodEnd.set(Calendar.MILLISECOND, 999);
+			periodEnd.set(Calendar.SECOND, 59);
+			periodEnd.set(Calendar.MINUTE, 59);
+			periodEnd.set(Calendar.HOUR_OF_DAY, 23);
+			periodEnd.set(Calendar.DATE,
+					periodEnd.getActualMaximum(Calendar.DATE));
+		}
+		if (periodStart.before(movementDate)) {
+			if (periodEnd != null) {
+				if (periodEnd.after(movementDate)) {
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return true;
+			}
+		} else {
+			return false;
+		}
 	}
 
 	/**

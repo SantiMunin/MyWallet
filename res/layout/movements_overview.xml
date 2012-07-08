@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_height="fill_parent" >
 
                 <LinearLayout
-                    android:id="@+id/dailytab"
+                    android:id="@+id/tab"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >

@@ -42,6 +42,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
@@ -130,7 +131,8 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 			catServ = new CategoryService(getHelper());
 			cashServ = new CashFlowService(getHelper());
 		} catch (SQLException e) {
-			// TODO
+			Log.e(TAG, e.getMessage());
+			return;
 		}
 		initializeViews();
 
@@ -274,10 +276,12 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 				case 0:
 					((TableRow) findViewById(R.id.addOp_endDateRow))
 							.setVisibility(View.GONE);
+					((TextView) findViewById(R.id.label_date)).setText(getString(R.string.date));
 					break;
 				default:
 					((TableRow) findViewById(R.id.addOp_endDateRow))
 							.setVisibility(View.VISIBLE);
+					((TextView) findViewById(R.id.label_date)).setText(getString(R.string.from));
 					break;
 				}
 			}
@@ -318,7 +322,6 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 						MovementType mov = MovementType
 								.getFromCode(movementType
 										.getSelectedItemPosition());
-						// TODO check spinners
 						Category c;
 						if (category.getSelectedItemPosition() < 0
 								|| categoryList.size() == 0) {
@@ -327,7 +330,6 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 							c = categoryList.get(category
 									.getSelectedItemPosition());
 						}
-
 						if (c == null) {
 							Toast.makeText(getApplicationContext(),
 									R.string.not_category_selected,
