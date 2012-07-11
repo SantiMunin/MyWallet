@@ -1,4 +1,7 @@
 2012-07-11	Santiago Munin <burning1@gmail.com>
+	* test/es/udc/santiago/test/CashFlowServiceTest.java: Added test with endless movements.
+
+2012-07-11	Santiago Munin <burning1@gmail.com>
 	* src/es/udc/santiago/model/facade/CashFlow.java: Changed clone() method, now dates are cloned too.
 	* src/es/udc/santiago/model/facade/CashFlowService.java: getAllWithFilter() now clones the received date because it will change its value.
 	* src/es/udc/santiago/model/util/ModelUtilities.java: Fixed a null-pointer bug.
