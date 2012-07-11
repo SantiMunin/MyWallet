@@ -114,14 +114,11 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		mTabHost = getTabHost();
 
 		mTabHost.addTab(mTabHost.newTabSpec("daily")
-				.setIndicator(getString(R.string.daily))
-				.setContent(R.id.tab));
+				.setIndicator(getString(R.string.daily)).setContent(R.id.tab));
 		mTabHost.addTab(mTabHost.newTabSpec("monthly")
-				.setIndicator(getString(R.string.monthly))
-				.setContent(R.id.tab));
+				.setIndicator(getString(R.string.monthly)).setContent(R.id.tab));
 		mTabHost.addTab(mTabHost.newTabSpec("yearly")
-				.setIndicator(getString(R.string.yearly))
-				.setContent(R.id.tab));
+				.setIndicator(getString(R.string.yearly)).setContent(R.id.tab));
 		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
 
 			@Override
@@ -458,8 +455,14 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			}
 			ViewUtils.printAmount(getApplicationContext(), incomes,
 					totalIncomes, true);
-			ViewUtils.printAmount(getApplicationContext(), spends,
-					-totalSpends, true);
+			// Don't print a negative amount if totalSpends = 0
+			if (totalSpends == 0) {
+				ViewUtils.printAmount(getApplicationContext(), spends,
+						totalSpends, true);
+			} else {
+				ViewUtils.printAmount(getApplicationContext(), spends,
+						-totalSpends, true);
+			}
 			totalBalance = totalIncomes - totalSpends;
 			ViewUtils.printAmount(getApplicationContext(), balance,
 					totalBalance, true);

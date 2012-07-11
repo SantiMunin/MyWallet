@@ -1,4 +1,15 @@
 2012-07-11	Santiago Munin <burning1@gmail.com>
+	* res/drawable-hdpi/ic_launcher.png,
+	  res/drawable-ldpi/ic_launcher.png,
+      res/drawable-mdpi/ic_launcher.png,
+      res/drawable-xhdpi/ic_launcher.png: Added application's icon.
+    * res/drawable-mdpi/euro_currency_sign.png: Modified icon.
+	* res/values/strings.xml: Little changes in entries.
+	* src/es/udc/santiago/model/facade/CashFlowService.java: Removed an old TODO comment.
+	* src/es/udc/santiago/view/cashflows/OverviewActivity.java: Fixed a print bug.
+	* src/es/udc/santiago/view/utils/ViewUtils.java: Fixed the currency print in "es" locales.
+
+2012-07-11	Santiago Munin <burning1@gmail.com>
 	* test/es/udc/santiago/test/CashFlowServiceTest.java: Added test with endless movements.
 
 2012-07-11	Santiago Munin <burning1@gmail.com>

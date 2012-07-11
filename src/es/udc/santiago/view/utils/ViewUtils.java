@@ -19,6 +19,7 @@ package es.udc.santiago.view.utils;
 
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Locale;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -55,9 +56,13 @@ public class ViewUtils {
 		String content;
 		// Does not print decimals if is not necessary.
 		int color = context.getResources().getColor(R.color.green);
-		NumberFormat nf = NumberFormat.getCurrencyInstance();
-		nf.setCurrency(Currency.getInstance(currency));
-		content = nf.format(amount);
+		if (Locale.getDefault().toString().toLowerCase().startsWith("es")) {
+			content = NumberFormat.getInstance().format(amount) + " €";
+		} else {
+			NumberFormat nf = NumberFormat.getCurrencyInstance();
+			nf.setCurrency(Currency.getInstance(currency));
+			content = nf.format(amount);
+		}
 		if (amount < 0) {
 			color = context.getResources().getColor(R.color.red);
 		}

@@ -196,7 +196,6 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 						periodEnd = null;
 					}
 					// Checks what months movements are in period range
-					// TODO years
 					for (int i = start.get(Calendar.YEAR); i <= end
 							.get(Calendar.YEAR); i++) {
 						for (int j = 0; j < 12; j++) {

@@ -42,7 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="income">Income</string>
     <string name="incomes">Incomes</string>
     <string name="balance">Balance</string>
-    <string name="once">Once</string>
+    <string name="once">Single</string>
     <string name="daily">Daily</string>
     <string name="monthly">Monthly</string>
     <string name="yearly">Annual</string>
