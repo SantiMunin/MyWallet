@@ -157,8 +157,12 @@ public class CashFlow {
 		c.setAmount(this.amount);
 		c.setCategory(this.category);
 		c.setConcept(this.concept);
-		c.setDate(this.date);
-		c.setEndDate(this.endDate);
+		c.setDate((Date) this.date.clone());
+		if (this.endDate != null) {
+			c.setEndDate((Date) this.endDate);
+		} else {
+			c.setEndDate(null);
+		}
 		c.setId(this.id);
 		c.setMovType(this.movType);
 		c.setPeriod(period);

@@ -117,66 +117,91 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		this.service.delete(cashId);
 		assertFalse(this.service.exists(c));
 	}
-	
+
 	public void testGetWithFilter() throws DuplicateEntryException {
 		Calendar day1 = new GregorianCalendar(2012, 5, 27);
 		Calendar day2 = new GregorianCalendar(2012, 5, 25);
-			CashFlow cf = new CashFlow(-1, "Income", (float) 2000,
-					new Category(id), day1.getTime(), null, Period.ONCE,
-					MovementType.INCOME);
-			this.service.add(cf);
-			cf = new CashFlow(-1, "Spend", (float) 2000, new Category(id2),
-					day2.getTime(), null, Period.ONCE, MovementType.SPEND);
-			this.service.add(cf);
-			cf = new CashFlow(-1, "SpendMonthly", (float) 2000, new Category(
-					id3), day1.getTime(), null, Period.MONTHLY,
-					MovementType.SPEND);
-			this.service.add(cf);
-			cf = new CashFlow(-1, "SpendYearly", (float) 2000,
-					new Category(id), day1.getTime(), null, Period.YEARLY,
-					MovementType.SPEND);
-			this.service.add(cf);
-			assertEquals(1,
-					this.service.getAllWithFilter(day1, Period.ONCE, null, null)
-							.size());
-			assertEquals(1,
-					this.service.getAllWithFilter(day2, Period.ONCE, null, null)
-							.size());
-			assertEquals(
-					3,
-					this.service.getAllWithFilter(day1, Period.MONTHLY, null,
-							null).size());
-			assertEquals(
-					4,
-					this.service.getAllWithFilter(day1, Period.YEARLY, null,
-							null).size());
-			assertEquals(
-					0,
-					this.service.getAllWithFilter(day1, Period.MONTHLY,
-							MovementType.INCOME, null).size());
-			assertEquals(
-					3,
-					this.service.getAllWithFilter(day1, Period.YEARLY,
-							MovementType.SPEND, null).size());
-			assertEquals(
-					3,
-					this.service.getAllWithFilter(day1, Period.YEARLY,
-							MovementType.SPEND, null).size());
-			assertEquals(
-					3,
-					this.service.getAllWithFilter(day1, Period.YEARLY,
-							MovementType.SPEND, null).size());
-			assertEquals(
-					1,
-					this.service.getAllWithFilter(day1, Period.YEARLY,
-							MovementType.SPEND, new Category(id3)).size());
-			assertEquals(
-					1,
-					this.service.getAllWithFilter(day2, Period.YEARLY,
-							MovementType.SPEND, new Category(id2)).size());
-			assertEquals(
-					0,
-					this.service.getAllWithFilter(day1, Period.ONCE,
-							MovementType.SPEND, new Category(id2)).size());
+		Calendar day3 = new GregorianCalendar(2010, 5, 25);
+		Calendar day4 = new GregorianCalendar(2011, 5, 25);
+		Calendar day5 = new GregorianCalendar(2012, 5, 27);
+		Calendar day6 = new GregorianCalendar(2014, 5, 27);
+		Calendar day7 = new GregorianCalendar(2016, 5, 27);
+		// Unique movements
+		CashFlow cf = new CashFlow(-1, "1", (float) 2000, new Category(id),
+				day1.getTime(), null, Period.ONCE, MovementType.INCOME);
+		this.service.add(cf);
+		cf = new CashFlow(-1, "2", (float) 2000, new Category(id2),
+				day2.getTime(), null, Period.ONCE, MovementType.SPEND);
+		this.service.add(cf);
+		// Monthly movements
+		// Start and end before 2012
+		cf = new CashFlow(-1, "3", (float) 123213, new Category(id2),
+				day3.getTime(), day4.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Start before 2012, end 2012
+		cf = new CashFlow(-1, "4", (float) 123213, new Category(id2),
+				day4.getTime(), day5.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Start 2012, end 2012
+		cf = new CashFlow(-1, "5", (float) 2000, new Category(id3),
+				day1.getTime(), day2.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Start 2012, end after 2012
+		cf = new CashFlow(-1, "6", (float) 2000, new Category(id),
+				day1.getTime(), day6.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Start after 2012, end after 2012
+		cf = new CashFlow(-1, "7", (float) 2000, new Category(id),
+				day6.getTime(), day7.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Start before 2012, end after 2012
+		cf = new CashFlow(-1, "8", (float) 2000, new Category(id),
+				day4.getTime(), day7.getTime(), Period.MONTHLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		// Yearly movements
+		cf = new CashFlow(-1, "9", (float) 2000, new Category(id),
+				day1.getTime(), day6.getTime(), Period.YEARLY,
+				MovementType.SPEND);
+		this.service.add(cf);
+		assertEquals(1,
+				this.service.getAllWithFilter(day1, Period.ONCE, null, null)
+						.size());
+		assertEquals(1,
+				this.service.getAllWithFilter(day2, Period.ONCE, null, null)
+						.size());
+		assertEquals(6,
+				this.service.getAllWithFilter(day1, Period.MONTHLY, null, null)
+						.size());
+		assertEquals(29,
+				this.service.getAllWithFilter(day1, Period.YEARLY, null, null)
+						.size());
+		assertEquals(
+				1,
+				this.service.getAllWithFilter(day1, Period.MONTHLY,
+						MovementType.INCOME, null).size());
+
+		assertEquals(
+				28,
+				this.service.getAllWithFilter(day1, Period.YEARLY,
+						MovementType.SPEND, null).size());
+		assertEquals(
+				1,
+				this.service.getAllWithFilter(day1, Period.YEARLY,
+						MovementType.SPEND, new Category(id3)).size());
+		assertEquals(
+				7,
+				this.service.getAllWithFilter(day2, Period.YEARLY,
+						MovementType.SPEND, new Category(id2)).size());
+		assertEquals(
+				0,
+				this.service.getAllWithFilter(day1, Period.ONCE,
+						MovementType.SPEND, new Category(id2)).size());
+
 	}
 }

@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.model.util;
 
 import java.text.DateFormat;
@@ -181,7 +181,9 @@ public class ModelUtilities {
 		res.setEndDate(c.getEndDate());
 		res.setMovType(c.getMovType().getValue());
 		res.setPeriod(c.getPeriod().getCode());
-		res.setCategory(new CategoryVO(c.getCategory().getId()));
+		if (c.getCategory() != null) {
+			res.setCategory(new CategoryVO(c.getCategory().getId()));
+		}
 		return res;
 	}
 

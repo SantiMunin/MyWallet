@@ -152,6 +152,8 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 */
 	public List<CashFlow> getAllWithFilter(Calendar start, Period period,
 			MovementType type, Category cat) {
+		// Changes won't persist after method
+		start = (Calendar) start.clone();
 		List<CashFlow> result = new ArrayList<CashFlow>();
 		if ((start == null || period == null)) {
 			return result;
@@ -188,18 +190,27 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 					Calendar periodStart = Calendar.getInstance();
 					periodStart.setTime(cashFlow.getDate());
 					Calendar periodEnd = Calendar.getInstance();
-					periodEnd.setTime(cashFlow.getEndDate());
-					//Checks what months movements are in period range
-					for (int i = 0; i < 12; i++) {
-						CashFlow c = (CashFlow) cashFlow.clone();
-						Date date = c.getDate();
-						date.setMonth(i);
-						c.setDate(date);
-						Calendar movementDate = Calendar.getInstance();
-						movementDate.setTime(c.getDate());
-						if (movementInPeriod(periodStart, periodEnd,
-								movementDate)) {
-							result.add(c);
+					if (cashFlow.getEndDate() != null) {
+						periodEnd.setTime(cashFlow.getEndDate());
+					} else {
+						periodEnd = null;
+					}
+					// Checks what months movements are in period range
+					// TODO years
+					for (int i = start.get(Calendar.YEAR); i <= end
+							.get(Calendar.YEAR); i++) {
+						for (int j = 0; j < 12; j++) {
+							CashFlow c = (CashFlow) cashFlow.clone();
+							Date date = c.getDate();
+							date.setYear(i - 1900);
+							date.setMonth(j);
+							c.setDate(date);
+							Calendar movementDate = Calendar.getInstance();
+							movementDate.setTime(c.getDate());
+							if (movementInPeriod(periodStart, periodEnd,
+									movementDate)) {
+								result.add(c);
+							}
 						}
 					}
 				}
@@ -298,9 +309,6 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		}
 
 		if (start != null) {
-			if (needAnd) {
-				where.and();
-			}
 			start.set(Calendar.MILLISECOND, 0);
 			start.set(Calendar.SECOND, 0);
 			start.set(Calendar.MINUTE, 0);
@@ -309,13 +317,23 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			end.set(Calendar.SECOND, 59);
 			end.set(Calendar.MINUTE, 59);
 			end.set(Calendar.HOUR_OF_DAY, 23);
-			where.between("date", start.getTime(), end.getTime());
-
-			if (period == Period.MONTHLY || period == Period.YEARLY) {
+			if (period == Period.ONCE) {
+				if (needAnd) {
+					where.and();
+				}
+				where.between("date", start.getTime(), end.getTime());
+			} else if (needAnd) {
 				where.and(
 						where,
-						where.or(where.le("endDate", end.getTime()),
-								where.isNull("endDate")));
+						where.and(
+								where.le("date", end.getTime()),
+								where.or(where.isNull("endDate"),
+										where.ge("endDate", start.getTime()))));
+			} else {
+				where.and(
+						where.le("date", end.getTime()),
+						where.or(where.isNull("endDate"),
+								where.ge("endDate", start.getTime())));
 			}
 			needAnd = true;
 		}
