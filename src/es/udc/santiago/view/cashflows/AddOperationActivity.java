@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.view.cashflows;
 
 import java.sql.SQLException;
@@ -57,6 +57,7 @@ import es.udc.santiago.model.facade.Category;
 import es.udc.santiago.model.facade.CategoryService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
+import es.udc.santiago.view.utils.ViewUtils;
 
 /**
  * From this activity users will be able to insert expenses or incomes.
@@ -110,8 +111,12 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 				dateDay = dayOfMonth;
 				Calendar d = new GregorianCalendar(year, monthOfYear,
 						dayOfMonth);
-				dateButton.setText(DateFormat.getDateInstance().format(
-						d.getTime()));
+				if (ViewUtils.isSameDay(d, Calendar.getInstance())) {
+					dateButton.setText(getString(R.string.today));
+				} else {
+					dateButton.setText(DateFormat.getDateInstance().format(
+							d.getTime()));
+				}
 			}
 		};
 		endDateListener = new DatePickerDialog.OnDateSetListener() {
@@ -226,8 +231,10 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 			data.add("");
 		}
 		data.add(getString(R.string.new_category));
-		category.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, data));
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, data);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		category.setAdapter(adapter);
 		if (newCategoryPosition >= 0) {
 			category.setSelection(newCategoryPosition, true);
 		} else {
@@ -257,16 +264,21 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		});
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
-		movementType.setAdapter(ArrayAdapter.createFromResource(
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				getApplicationContext(), R.array.movementtypes,
-				android.R.layout.simple_spinner_item));
+				android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		movementType.setAdapter(adapter);
 		period = (Spinner) findViewById(R.id.addOp_periodSpinner);
 		List<String> data = new ArrayList<String>();
 		data.add(getString(R.string.once));
 		data.add(getString(R.string.monthly));
 		data.add(getString(R.string.yearly));
-		period.setAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, data));
+		ArrayAdapter<String> stringAdapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_spinner_item, data);
+		stringAdapter
+				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		period.setAdapter(stringAdapter);
 		period.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -276,12 +288,14 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 				case 0:
 					((TableRow) findViewById(R.id.addOp_endDateRow))
 							.setVisibility(View.GONE);
-					((TextView) findViewById(R.id.label_date)).setText(getString(R.string.date));
+					((TextView) findViewById(R.id.label_date))
+							.setText(getString(R.string.date));
 					break;
 				default:
 					((TableRow) findViewById(R.id.addOp_endDateRow))
 							.setVisibility(View.VISIBLE);
-					((TextView) findViewById(R.id.label_date)).setText(getString(R.string.from));
+					((TextView) findViewById(R.id.label_date))
+							.setText(getString(R.string.from));
 					break;
 				}
 			}

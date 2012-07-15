@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package es.udc.santiago.view.utils;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 
@@ -71,4 +72,20 @@ public class ViewUtils {
 			text.setTextColor(color);
 		}
 	}
+	
+    /**
+     * Checks if two calendars represent the same day ignoring time.
+     * @param cal1  the first calendar, not altered, not null.
+     * @param cal2  the second calendar, not altered, not null.
+     * @return true if they represent the same day.
+     * @throws IllegalArgumentException if either calendar is <code>null</code>
+     */
+    public static boolean isSameDay(Calendar cal1, Calendar cal2) {
+        if (cal1 == null || cal2 == null) {
+            throw new IllegalArgumentException("The dates must not be null");
+        }
+        return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA) &&
+                cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
+    }
 }

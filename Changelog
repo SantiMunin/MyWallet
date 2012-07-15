@@ -1,3 +1,8 @@
+2012-07-15	Santiago Munin <burning1@gmail.com>
+	* .gitignore: Added lint.xml
+	* src/es/udc/santiago/view/cashflows/AddOperationActivity.java: Changed the layout of spinners (dropDownViews).
+	* src/es/udc/santiago/view/utils/ViewUtils.java: Added a method which checks if a given date represents the current day.
+
 2012-07-11	Santiago Munin <burning1@gmail.com>
 	* res/drawable-hdpi/ic_launcher.png,
 	  res/drawable-ldpi/ic_launcher.png,
