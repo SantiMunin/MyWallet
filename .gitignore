@@ -1,5 +1,13 @@
 bin/
 gen/
-TODO*
+TODO
+
+
 .settings/
 lint.xml
+
+.project
+.classpath
+project.properties
+proguard.cfg
+

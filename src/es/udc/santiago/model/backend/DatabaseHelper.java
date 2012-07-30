@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.model.backend;
 
 import java.sql.SQLException;
@@ -37,13 +37,14 @@ import com.j256.ormlite.table.TableUtils;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private static final String DATABASE_NAME = "my_wallet.db";
-	//It has to be increased if a change is done.
+	// It has to be increased if a change is done.
 	private static final int DATABASE_VERSION = 1;
 
-	//Daos
+	// Daos
 	private Dao<CategoryVO, Long> categoryDao = null;
 	private Dao<CashFlowVO, Long> cashFlowDao = null;
-	//private RuntimeExceptionDao<Category, Integer> simpleRuntimeDao = null;
+
+	// private RuntimeExceptionDao<Category, Integer> simpleRuntimeDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -75,7 +76,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
 			TableUtils.dropTable(connectionSource, CategoryVO.class, true);
-			//After we drop the old databases, we create the new ones
+			// After we drop the old databases, we create the new ones
 			onCreate(db, connectionSource);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
@@ -84,8 +85,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Returns the Database Access Object (DAO) for our Category class. It
-	 * will create it or just give the cached value.
+	 * Returns the Database Access Object (DAO) for our Category class. It will
+	 * create it or just give the cached value.
 	 * 
 	 * @throws java.sql.SQLException
 	 */
@@ -102,18 +103,18 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		}
 		return cashFlowDao;
 	}
+
 	/**
 	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao
-	 * for our Category class. It will create it or just give the cached
-	 * value. RuntimeExceptionDao only through RuntimeExceptions.
+	 * for our Category class. It will create it or just give the cached value.
+	 * RuntimeExceptionDao only through RuntimeExceptions.
 	 */
-	//TODO don't know what is this exactly
-	/*public RuntimeExceptionDao<Category, Integer> getSimpleDataDao() {
-		if (simpleRuntimeDao == null) {
-			simpleRuntimeDao = getRuntimeExceptionDao(Category.class);
-		}
-		return simpleRuntimeDao;
-	}*/
+	// TODO don't know what is this exactly
+	/*
+	 * public RuntimeExceptionDao<Category, Integer> getSimpleDataDao() { if
+	 * (simpleRuntimeDao == null) { simpleRuntimeDao =
+	 * getRuntimeExceptionDao(Category.class); } return simpleRuntimeDao; }
+	 */
 
 	/**
 	 * Close the database connections and clear any cached DAOs.
@@ -123,6 +124,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		super.close();
 		this.cashFlowDao = null;
 		this.categoryDao = null;
-	//	simpleRuntimeDao = null;
+		// simpleRuntimeDao = null;
 	}
 }
