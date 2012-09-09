@@ -30,13 +30,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+
 import es.udc.santiago.model.backend.CashFlowVO;
 import es.udc.santiago.model.backend.CategoryVO;
+import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.facade.CashFlow;
 import es.udc.santiago.model.facade.Category;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
 
+import android.content.Context;
 import android.util.Log;
 
 /**
@@ -48,6 +52,22 @@ import android.util.Log;
 public class ModelUtilities {
 
 	private static String TAG = "ModelUtilities";
+	private static DatabaseHelper databaseHelper;
+
+	/**
+	 * Gets DatabaseHelper
+	 * 
+	 * @param context
+	 *            Application context.
+	 * @return DatabaseHelper instance
+	 */
+	public static DatabaseHelper getHelper(Context context) {
+		if (databaseHelper == null) {
+			databaseHelper = OpenHelperManager.getHelper(context,
+					DatabaseHelper.class);
+		}
+		return databaseHelper;
+	}
 
 	/**
 	 * Converts a string (iso 8601 format) to a date object.

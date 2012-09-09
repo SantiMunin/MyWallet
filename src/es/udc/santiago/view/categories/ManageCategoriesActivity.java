@@ -14,7 +14,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.view.categories;
 
 import java.sql.SQLException;
@@ -37,15 +37,15 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.exceptions.DuplicateEntryException;
 import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.facade.Category;
 import es.udc.santiago.model.facade.CategoryService;
+import es.udc.santiago.model.util.ModelUtilities;
 
 /**
  * Manage categories.
@@ -53,8 +53,7 @@ import es.udc.santiago.model.facade.CategoryService;
  * @author Santiago Munín González
  * 
  */
-public class ManageCategoriesActivity extends
-		OrmLiteBaseActivity<DatabaseHelper> {
+public class ManageCategoriesActivity extends SherlockActivity {
 	private static final String TAG = "ManageCategoriesActivity";
 	private CategoryService catServ;
 	List<Category> list;
@@ -71,8 +70,7 @@ public class ManageCategoriesActivity extends
 		try {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.categories_management);
-			catServ = new CategoryService(OpenHelperManager.getHelper(this,
-					DatabaseHelper.class));
+			catServ = new CategoryService(ModelUtilities.getHelper(this));
 			listView = (ListView) this.findViewById(R.id.categoryList);
 			fillCategories();
 			catName = (EditText) this.findViewById(R.id.catName);
@@ -99,6 +97,21 @@ public class ManageCategoriesActivity extends
 		} catch (SQLException e) {
 			Log.e(TAG, e.getMessage());
 		}
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.manage_categories);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return true;
 	}
 
 	@Override
@@ -106,6 +119,7 @@ public class ManageCategoriesActivity extends
 		super.onResume();
 		fillCategories();
 	}
+
 	/**
 	 * Fetches all categories and fill the list. Not async task is needed for
 	 * this.

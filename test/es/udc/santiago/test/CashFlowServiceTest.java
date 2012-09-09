@@ -71,7 +71,7 @@ public class CashFlowServiceTest extends AndroidTestCase {
 	public void testCreateExists() throws DuplicateEntryException {
 		CashFlow cash = new CashFlow(-1, "TestConcept", (float) 1.6,
 				new Category(id), new Date(), new Date(), Period.ONCE,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		long cashId = this.service.add(cash);
 		cash.setId(cashId);
 		assertTrue(this.service.exists(cash));
@@ -81,13 +81,13 @@ public class CashFlowServiceTest extends AndroidTestCase {
 			DuplicateEntryException {
 		Date now = new Date();
 		CashFlow c = new CashFlow(-1, "TestConcept", (float) 1.6, new Category(
-				id), now, now, Period.ONCE, MovementType.SPEND);
+				id), now, now, Period.ONCE, MovementType.EXPENSE);
 		long cashId = this.service.add(c);
 		c = this.service.get(cashId);
 		assertEquals(c.getId(), cashId);
 		assertEquals(c.getAmount(), (float) 1.6);
 		assertEquals(c.getConcept(), "TestConcept");
-		assertEquals(c.getMovType(), MovementType.SPEND);
+		assertEquals(c.getMovType(), MovementType.EXPENSE);
 		assertEquals(c.getPeriod(), Period.ONCE);
 		assertEquals(c.getDate(), now);
 		assertEquals(c.getEndDate(), now);
@@ -100,10 +100,10 @@ public class CashFlowServiceTest extends AndroidTestCase {
 
 	public void testGetAll() throws DuplicateEntryException {
 		CashFlow c = new CashFlow(-1, "TestConcept", (float) 1.6, new Category(
-				id), new Date(), new Date(), Period.ONCE, MovementType.SPEND);
+				id), new Date(), new Date(), Period.ONCE, MovementType.EXPENSE);
 		CashFlow c2 = new CashFlow(-1, "TestConcept", (float) 1.8,
 				new Category(id), new Date(), new Date(), Period.ONCE,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(c);
 		this.service.add(c2);
 		assertEquals(2, this.service.getAll().size());
@@ -112,7 +112,7 @@ public class CashFlowServiceTest extends AndroidTestCase {
 	public void testDeleteExist() throws EntryNotFoundException,
 			DuplicateEntryException {
 		CashFlow c = new CashFlow(-1, "TestConcept", (float) 1.6, new Category(
-				id), new Date(), new Date(), Period.ONCE, MovementType.SPEND);
+				id), new Date(), new Date(), Period.ONCE, MovementType.EXPENSE);
 		long cashId = this.service.add(c);
 		this.service.delete(cashId);
 		assertFalse(this.service.exists(c));
@@ -131,43 +131,43 @@ public class CashFlowServiceTest extends AndroidTestCase {
 				day1.getTime(), null, Period.ONCE, MovementType.INCOME);
 		this.service.add(cf);
 		cf = new CashFlow(-1, "2", (float) 2000, new Category(id2),
-				day2.getTime(), null, Period.ONCE, MovementType.SPEND);
+				day2.getTime(), null, Period.ONCE, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Monthly movements
 		// Start and end before 2012
 		cf = new CashFlow(-1, "3", (float) 123213, new Category(id2),
 				day3.getTime(), day4.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start before 2012, end 2012
 		cf = new CashFlow(-1, "4", (float) 123213, new Category(id2),
 				day4.getTime(), day5.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start 2012, end 2012
 		cf = new CashFlow(-1, "5", (float) 2000, new Category(id3),
 				day1.getTime(), day2.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start 2012, end after 2012
 		cf = new CashFlow(-1, "6", (float) 2000, new Category(id),
 				day1.getTime(), day6.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start after 2012, end after 2012
 		cf = new CashFlow(-1, "7", (float) 2000, new Category(id),
 				day6.getTime(), day7.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start before 2012, end after 2012
 		cf = new CashFlow(-1, "8", (float) 2000, new Category(id),
 				day4.getTime(), day7.getTime(), Period.MONTHLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		// Yearly movements
 		cf = new CashFlow(-1, "9", (float) 2000, new Category(id),
 				day1.getTime(), day6.getTime(), Period.YEARLY,
-				MovementType.SPEND);
+				MovementType.EXPENSE);
 		this.service.add(cf);
 		assertEquals(1,
 				this.service.getAllWithFilter(day1, Period.ONCE, null, null)
@@ -189,19 +189,19 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		assertEquals(
 				28,
 				this.service.getAllWithFilter(day1, Period.YEARLY,
-						MovementType.SPEND, null).size());
+						MovementType.EXPENSE, null).size());
 		assertEquals(
 				1,
 				this.service.getAllWithFilter(day1, Period.YEARLY,
-						MovementType.SPEND, new Category(id3)).size());
+						MovementType.EXPENSE, new Category(id3)).size());
 		assertEquals(
 				7,
 				this.service.getAllWithFilter(day2, Period.YEARLY,
-						MovementType.SPEND, new Category(id2)).size());
+						MovementType.EXPENSE, new Category(id2)).size());
 		assertEquals(
 				0,
 				this.service.getAllWithFilter(day1, Period.ONCE,
-						MovementType.SPEND, new Category(id2)).size());
+						MovementType.EXPENSE, new Category(id2)).size());
 	}
 
 	public void testGetWithFilterEndlessDates() throws DuplicateEntryException {
@@ -214,28 +214,28 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		// Monthly
 		// Start before 2012
 		CashFlow cf = new CashFlow(-1, "8", (float) 2000, new Category(id),
-				day4.getTime(), null, Period.MONTHLY, MovementType.SPEND);
+				day4.getTime(), null, Period.MONTHLY, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start after 2012
 		cf = new CashFlow(-1, "7", (float) 2000, new Category(id),
-				day6.getTime(), null, Period.MONTHLY, MovementType.SPEND);
+				day6.getTime(), null, Period.MONTHLY, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start in 2012
 		cf = new CashFlow(-1, "5", (float) 2000, new Category(id3),
-				day1.getTime(), null, Period.MONTHLY, MovementType.SPEND);
+				day1.getTime(), null, Period.MONTHLY, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Yearly
 		// Start before 2012
 		cf = new CashFlow(-1, "8", (float) 2000, new Category(id),
-				day4.getTime(), null, Period.YEARLY, MovementType.SPEND);
+				day4.getTime(), null, Period.YEARLY, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start after 2012
 		cf = new CashFlow(-1, "7", (float) 2000, new Category(id),
-				day6.getTime(), null, Period.YEARLY, MovementType.SPEND);
+				day6.getTime(), null, Period.YEARLY, MovementType.EXPENSE);
 		this.service.add(cf);
 		// Start in 2012
 		cf = new CashFlow(-1, "5", (float) 2000, new Category(id3),
-				day1.getTime(), null, Period.YEARLY, MovementType.SPEND);
+				day1.getTime(), null, Period.YEARLY, MovementType.EXPENSE);
 		this.service.add(cf);
 
 		assertEquals(0,
@@ -258,18 +258,18 @@ public class CashFlowServiceTest extends AndroidTestCase {
 		assertEquals(
 				21,
 				this.service.getAllWithFilter(day1, Period.YEARLY,
-						MovementType.SPEND, null).size());
+						MovementType.EXPENSE, null).size());
 		assertEquals(
 				8,
 				this.service.getAllWithFilter(day1, Period.YEARLY,
-						MovementType.SPEND, new Category(id3)).size());
+						MovementType.EXPENSE, new Category(id3)).size());
 		assertEquals(
 				0,
 				this.service.getAllWithFilter(day2, Period.YEARLY,
-						MovementType.SPEND, new Category(id2)).size());
+						MovementType.EXPENSE, new Category(id2)).size());
 		assertEquals(
 				0,
 				this.service.getAllWithFilter(day1, Period.ONCE,
-						MovementType.SPEND, new Category(id2)).size());
+						MovementType.EXPENSE, new Category(id2)).size());
 	}
 }

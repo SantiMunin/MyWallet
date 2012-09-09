@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="movType">Type</string>
     <string name="amount">Amount</string>
     <string name="error_fieldsNotFilled">There are required field without values.</string>
-    <string name="spend">Spend</string>
-    <string name="spends">Spends</string>
+    <string name="expense">Expense</string>
+    <string name="expenses">Expenses</string>
     <string name="income">Income</string>
     <string name="incomes">Incomes</string>
     <string name="balance">Balance</string>

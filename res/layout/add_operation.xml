@@ -14,7 +14,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" >
@@ -22,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
     <TableLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:padding="5dp"
         android:stretchColumns="0,1" >
 

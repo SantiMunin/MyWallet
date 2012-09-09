@@ -31,14 +31,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.SimpleAdapter;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.facade.CashFlow;
 import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
+import es.udc.santiago.model.util.ModelUtilities;
 import es.udc.santiago.view.utils.ViewAllMovementsListAdapter;
 
 /**
@@ -48,7 +50,7 @@ import es.udc.santiago.view.utils.ViewAllMovementsListAdapter;
  * 
  */
 public class ViewAllMovementsActivity extends
-		OrmLiteBaseListActivity<DatabaseHelper> {
+		SherlockListActivity {
 	private static String TAG = "ViewAllMovementsActivity";
 
 	@Override
@@ -69,8 +71,21 @@ public class ViewAllMovementsActivity extends
 			Log.e(TAG, "Shouldn't reach here");
 			return;
 		}
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.movementsoverview);
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return true;
+	}
 	/**
 	 * Fetches all movements from database and classify them. It receives an
 	 * Object array, the first element has to be a Calendar and the second has
@@ -93,7 +108,7 @@ public class ViewAllMovementsActivity extends
 			Log.i(TAG, "Fetching movements day: " + day.getTime().toGMTString()
 					+ " period: " + period.toString());
 			try {
-				return new CashFlowService(getHelper()).getAllWithFilter(day,
+				return new CashFlowService(ModelUtilities.getHelper(getApplicationContext())).getAllWithFilter(day,
 						period, null, null);
 			} catch (SQLException e) {
 				Log.e(TAG, e.getMessage());
@@ -125,7 +140,7 @@ public class ViewAllMovementsActivity extends
 					map.put("concept", "-----");
 				}
 				String amount = String.valueOf(cashf.getAmount());
-				if (cashf.getMovType() == MovementType.SPEND) {
+				if (cashf.getMovType() == MovementType.EXPENSE) {
 					amount = "-" + amount;
 				}
 				map.put("amount", amount);

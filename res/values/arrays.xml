@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <resources>
     <string-array name="movementtypes">
         <item>Incomes</item>
-        <item>Spends</item>
+        <item>Expenses</item>
     </string-array>
     <string-array name="currency">
         <item>€</item>

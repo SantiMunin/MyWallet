@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/manage_categories"
+        android:icon="@drawable/manage_categories"
+        android:showAsAction="always"
+        android:title="@string/manage_categories"/>
+        <item
+        android:id="@+id/view_all"
+        android:icon="@android:drawable/btn_star"
+        android:showAsAction="always"
+        android:title="@string/view_all_movements"/>
+    <item
+        android:id="@+id/add_movement"
+        android:icon="@drawable/add_operation"
+        android:showAsAction="always"
+        android:title="@string/add_cashflow"/>
+
+</menu>

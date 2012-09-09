@@ -1,20 +1,3 @@
-/*
-MyWallet is an android application which helps users to manager their personal accounts.
-Copyright (C) 2012 Santiago Munin
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.   
- */
 package es.udc.santiago.view.cashflows;
 
 import java.sql.SQLException;
@@ -37,10 +20,8 @@ import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -48,14 +29,16 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
-import android.widget.TabHost;
-import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseTabActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.facade.CashFlow;
 import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
@@ -64,13 +47,8 @@ import es.udc.santiago.model.util.ModelUtilities;
 import es.udc.santiago.view.categories.ManageCategoriesActivity;
 import es.udc.santiago.view.utils.ViewUtils;
 
-/**
- * Movements overview (daily, monthly or yearly).
- * 
- * @author Santiago Munín González
- * 
- */
-public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
+public class OverviewActivity extends SherlockFragmentActivity
+		implements com.actionbarsherlock.app.ActionBar.TabListener {
 	private static final String TAG = "OverviewActivity";
 	private static final int DATE_PICKER_DIALOG = 1;
 	private static final int DIALOG_SELECT_CURRENCY = 2;
@@ -87,60 +65,48 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		}
 	};
 
-	private TabHost mTabHost;
 	private Button dayButton;
 	private Calendar day;
 	private Period period;
 
 	private CashFlowService cashService;
-	private TextView incomes, spends, balance;
+	private TextView incomes, expenses, balance;
 	private List<Entry<String, Float>> top5incomes;
-	private List<Entry<String, Float>> top5spends;
+	private List<Entry<String, Float>> top5expenses;
 	private Map<String, Float> catIncomes = new HashMap<String, Float>();
-	private Map<String, Float> catSpends = new HashMap<String, Float>();
+	private Map<String, Float> catExpenses = new HashMap<String, Float>();
 	private MovementType top5type;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.movements_overview);
+		setContentView(R.layout.overview);
 		try {
-			cashService = new CashFlowService(getHelper());
+			cashService = new CashFlowService(ModelUtilities.getHelper(this));
 		} catch (SQLException e) {
 		}
 
 		top5incomes = new LinkedList<Map.Entry<String, Float>>();
-		top5spends = new LinkedList<Map.Entry<String, Float>>();
+		top5expenses = new LinkedList<Map.Entry<String, Float>>();
 		top5type = MovementType.INCOME;
-		mTabHost = getTabHost();
-
-		mTabHost.addTab(mTabHost.newTabSpec("daily")
-				.setIndicator(getString(R.string.daily)).setContent(R.id.tab));
-		mTabHost.addTab(mTabHost.newTabSpec("monthly")
-				.setIndicator(getString(R.string.monthly)).setContent(R.id.tab));
-		mTabHost.addTab(mTabHost.newTabSpec("yearly")
-				.setIndicator(getString(R.string.yearly)).setContent(R.id.tab));
-		mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
-
-			@Override
-			public void onTabChanged(String tabId) {
-				if (day == null) {
-					day = Calendar.getInstance();
-				}
-				if (tabId.equals("daily")) {
-					period = Period.ONCE;
-				}
-				if (tabId.equals("monthly")) {
-					period = Period.MONTHLY;
-				}
-				if (tabId.equals("yearly")) {
-					period = Period.YEARLY;
-				}
-				new GetMovementsTask().execute(day);
-			}
-		});
-		mTabHost.setCurrentTab(1);
 		day = Calendar.getInstance();
-		period = Period.MONTHLY;
+
+		ActionBar bar = getSupportActionBar();
+		bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		Tab tab = bar.newTab().setText(getString(R.string.today))
+				.setTabListener(this);
+
+		bar.addTab(tab);
+		tab = bar.newTab().setText(getString(R.string.monthly))
+				.setTabListener(this);
+
+		bar.addTab(tab);
+		tab = bar.newTab().setText(getString(R.string.yearly))
+				.setTabListener(this);
+
+		bar.addTab(tab);
+
+		period = Period.ONCE;
 
 		dayButton = (Button) findViewById(R.id.daybutton);
 		dayButton.setText(getString(R.string.today));
@@ -163,7 +129,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 							top5type = MovementType.INCOME;
 							break;
 						case 1:
-							top5type = MovementType.SPEND;
+							top5type = MovementType.EXPENSE;
 							break;
 						}
 						setTop5Categories(top5type);
@@ -174,23 +140,9 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 					}
 				});
 		incomes = (TextView) findViewById(R.id.incomes_daily);
-		spends = (TextView) findViewById(R.id.spends_daily);
+		expenses = (TextView) findViewById(R.id.expenses_daily);
 		balance = (TextView) findViewById(R.id.balance_daily);
-		((Button) findViewById(R.id.button_view_all_movements))
-				.setOnClickListener(new OnClickListener() {
 
-					@Override
-					public void onClick(View v) {
-						Intent i = new Intent(getApplicationContext(),
-								ViewAllMovementsActivity.class);
-						Bundle b = new Bundle();
-						b.putLong("startDayMilliseconds", day.getTimeInMillis());
-						b.putInt("periodCode", period.getCode());
-						i.putExtras(b);
-						startActivity(i);
-					}
-				});
-		new GetMovementsTask().execute(day);
 	}
 
 	@Override
@@ -199,30 +151,29 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		new GetMovementsTask().execute(day);
 	}
 
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.overview_menu, menu);
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.actionbar_menu, menu);
 		return true;
 	}
 
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.add_operation:
-			startActivity(new Intent(getApplicationContext(),
-					AddOperationActivity.class));
-			return true;
-		case R.id.manage_categories:
-			startActivity(new Intent(getApplicationContext(),
-					ManageCategoriesActivity.class));
-			return true;
-		case R.id.change_currency:
-			showDialog(DIALOG_SELECT_CURRENCY);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.add_movement) {
+			startActivity(new Intent(this, AddOperationActivity.class));
 		}
+		if (item.getItemId() == R.id.manage_categories) {
+			startActivity(new Intent(this, ManageCategoriesActivity.class));
+		}
+		if (item.getItemId() == R.id.view_all) {
+			Intent i = new Intent(getApplicationContext(),
+					ViewAllMovementsActivity.class);
+			Bundle b = new Bundle();
+			b.putLong("startDayMilliseconds", day.getTimeInMillis());
+			b.putInt("periodCode", period.getCode());
+			i.putExtras(b);
+			startActivity(i);
+		}
+		return true;
 	}
 
 	/**
@@ -302,11 +253,11 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				}
 			}
 		} else {
-			top5spends.clear();
-			catSpends = ModelUtilities.sortByValue(catSpends);
-			for (Entry<String, Float> entry : catSpends.entrySet()) {
+			top5expenses.clear();
+			catExpenses = ModelUtilities.sortByValue(catExpenses);
+			for (Entry<String, Float> entry : catExpenses.entrySet()) {
 				if (i < TOP_CATEGORIES_MAX) {
-					top5spends.add(entry);
+					top5expenses.add(entry);
 					i++;
 				} else {
 					break;
@@ -327,7 +278,7 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		if (movType == MovementType.INCOME) {
 			topList = top5incomes;
 		} else {
-			topList = top5spends;
+			topList = top5expenses;
 		}
 		resetCategoryTop();
 		try {
@@ -408,10 +359,10 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 		protected void onPostExecute(List<CashFlow> result) {
 			super.onPostExecute(result);
 			resetCategoryTop();
-			catSpends.clear();
+			catExpenses.clear();
 			catIncomes.clear();
 			Map<String, Float> catBalance = new HashMap<String, Float>();
-			float totalSpends = 0;
+			float totalExpenses = 0;
 			float totalIncomes = 0;
 			float totalBalance = 0;
 
@@ -423,8 +374,8 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 				} else {
 					catName = getString(R.string.other);
 				}
-				if (cashFlow.getMovType() == MovementType.SPEND) {
-					totalSpends += amount;
+				if (cashFlow.getMovType() == MovementType.EXPENSE) {
+					totalExpenses += amount;
 					// Adds category data
 					if (catBalance.containsKey(catName)) {
 						catBalance.put(catName,
@@ -432,10 +383,11 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 					} else {
 						catBalance.put(catName, -amount);
 					}
-					if (catSpends.containsKey(catName)) {
-						catSpends.put(catName, catSpends.get(catName) - amount);
+					if (catExpenses.containsKey(catName)) {
+						catExpenses.put(catName, catExpenses.get(catName)
+								- amount);
 					} else {
-						catSpends.put(catName, -amount);
+						catExpenses.put(catName, -amount);
 					}
 				} else {
 					totalIncomes += amount;
@@ -455,18 +407,43 @@ public class OverviewActivity extends OrmLiteBaseTabActivity<DatabaseHelper> {
 			}
 			ViewUtils.printAmount(getApplicationContext(), incomes,
 					totalIncomes, true);
-			// Don't print a negative amount if totalSpends = 0
-			if (totalSpends == 0) {
-				ViewUtils.printAmount(getApplicationContext(), spends,
-						totalSpends, true);
+			// Don't print a negative amount if totalExpenses = 0
+			if (totalExpenses == 0) {
+				ViewUtils.printAmount(getApplicationContext(), expenses,
+						totalExpenses, true);
 			} else {
-				ViewUtils.printAmount(getApplicationContext(), spends,
-						-totalSpends, true);
+				ViewUtils.printAmount(getApplicationContext(), expenses,
+						-totalExpenses, true);
 			}
-			totalBalance = totalIncomes - totalSpends;
+			totalBalance = totalIncomes - totalExpenses;
 			ViewUtils.printAmount(getApplicationContext(), balance,
 					totalBalance, true);
 			setTop5Categories(top5type);
 		}
+	}
+
+	@Override
+	public void onTabSelected(Tab tab, FragmentTransaction ft) {
+		switch (tab.getPosition()) {
+		case 0:
+			period = Period.ONCE;
+			break;
+		case 1:
+			period = Period.MONTHLY;
+			break;
+		case 2:
+			period = Period.YEARLY;
+			break;
+		}
+		new GetMovementsTask().execute(day);
+
+	}
+
+	@Override
+	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+
+	@Override
+	public void onTabReselected(Tab tab, FragmentTransaction ft) {
 	}
 }

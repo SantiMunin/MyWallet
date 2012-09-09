@@ -143,7 +143,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * @param period
 	 *            Period (daily, monthly or yearly), required.
 	 * @param type
-	 *            CashFlow type (spend or income).
+	 *            CashFlow type (expense or income).
 	 * 
 	 * @param cat
 	 *            Category.
@@ -273,7 +273,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 	 * @param period
 	 *            Period (daily, monthly or yearly).
 	 * @param type
-	 *            CashFlow type (spend or income).
+	 *            CashFlow type (expense or income).
 	 * 
 	 * @param cat
 	 *            Category.

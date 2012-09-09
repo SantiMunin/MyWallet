@@ -27,21 +27,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.exceptions.DuplicateEntryException;
 import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.facade.Category;
 import es.udc.santiago.model.facade.CategoryService;
+import es.udc.santiago.model.util.ModelUtilities;
 
 /**
  * 
  * @author Santiago Munín González
  * 
  */
-public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+public class EditCategoryActivity extends SherlockActivity {
 	TextView id;
 	long givenId;
 	TextView name;
@@ -87,6 +88,21 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 			}
 		});
 
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.manage_categories);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(
+			com.actionbarsherlock.view.MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return true;
 	}
 
 	private void fillViews() {
@@ -102,7 +118,7 @@ public class EditCategoryActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 		name = (TextView) findViewById(R.id.editCat_NameValue);
 		newName = (EditText) findViewById(R.id.editCat_newName);
 		try {
-			catServ = new CategoryService(getHelper());
+			catServ = new CategoryService(ModelUtilities.getHelper(this));
 			try {
 				String catName = catServ.get(givenId).getName();
 				name.setText(catName);

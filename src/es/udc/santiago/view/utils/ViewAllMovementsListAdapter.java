@@ -46,16 +46,7 @@ public class ViewAllMovementsListAdapter extends SimpleAdapter {
 		float amount = Float.valueOf((String) dataMap.get(position).get(
 				"amount"));
 		TextView amountTextView = (TextView) view.findViewById(R.id.mov_amount);
-		ViewUtils.printAmount(context, amountTextView, amount, false);
-		if (amount > 0) {
-			view.setBackgroundColor(context.getResources().getColor(
-					R.color.light_green));
-		} else {
-			if (amount < 0) {
-				view.setBackgroundColor(context.getResources().getColor(
-						R.color.light_red));
-			}
-		}
+		ViewUtils.printAmount(context, amountTextView, amount, true);
 		return view;
 	}
 

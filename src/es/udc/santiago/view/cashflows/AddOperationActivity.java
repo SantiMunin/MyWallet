@@ -45,10 +45,11 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.backend.DatabaseHelper;
 import es.udc.santiago.model.exceptions.DuplicateEntryException;
 import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.facade.CashFlow;
@@ -57,6 +58,7 @@ import es.udc.santiago.model.facade.Category;
 import es.udc.santiago.model.facade.CategoryService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
+import es.udc.santiago.model.util.ModelUtilities;
 import es.udc.santiago.view.utils.ViewUtils;
 
 /**
@@ -65,7 +67,7 @@ import es.udc.santiago.view.utils.ViewUtils;
  * @author Santiago Munín González
  * 
  */
-public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+public class AddOperationActivity extends SherlockActivity {
 	private static final String TAG = "Add operation";
 	private static final int DATE_DIALOG_ID = 0;
 	private static final int END_DATE_DIALOG_ID = 1;
@@ -133,14 +135,28 @@ public class AddOperationActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 			}
 		};
 		try {
-			catServ = new CategoryService(getHelper());
-			cashServ = new CashFlowService(getHelper());
+			catServ = new CategoryService(ModelUtilities.getHelper(this));
+			cashServ = new CashFlowService(ModelUtilities.getHelper(this));
 		} catch (SQLException e) {
 			Log.e(TAG, e.getMessage());
 			return;
 		}
 		initializeViews();
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setHomeButtonEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setTitle(R.string.add_cashflow);
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			break;
+		}
+		return true;
 	}
 
 	/**

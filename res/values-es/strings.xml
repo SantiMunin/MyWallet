@@ -37,8 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="movType">Tipo</string>
     <string name="amount">Cantidad</string>
     <string name="error_fieldsNotFilled">Hay campos obligatorios sin rellenar</string>
-    <string name="spend">Gasto</string>
-    <string name="spends">Gastos</string>
+    <string name="expense">Gasto</string>
+    <string name="expenses">Gastos</string>
     <string name="income">Ingreso</string>
     <string name="incomes">Ingresos</string>
     <string name="balance">Balance</string>

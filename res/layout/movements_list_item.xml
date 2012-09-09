@@ -22,48 +22,49 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_concept"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="2dp"
-        android:textColor="@android:color/white"
-        android:textSize="18dp"
+        android:textSize="16dp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/mov_category"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/mov_concept"
         android:layout_marginLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/mov_amount"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mov_category"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@android:color/white" />
+        android:layout_marginBottom="6dp"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/mov_period"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/mov_amount"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="5dp"
         android:layout_marginLeft="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/mov_until"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mov_period"
@@ -71,19 +72,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         android:layout_alignParentRight="true"
         android:layout_marginBottom="2dp"
         android:layout_marginRight="5dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white" />
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
         android:id="@+id/mov_date"
+        style="@style/MyTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mov_concept"
         android:layout_alignBottom="@+id/mov_category"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_marginTop="2dp"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@android:color/white" />
+        android:layout_marginTop="2dp" />
 
 </RelativeLayout>
