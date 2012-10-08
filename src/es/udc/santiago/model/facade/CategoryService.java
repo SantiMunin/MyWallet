@@ -47,7 +47,6 @@ public class CategoryService implements GenericService<Long, Category> {
 		this.catDao = dbHelper.getCategoryDao();
 	}
 
-	@Override
 	public Long add(Category object) throws DuplicateEntryException {
 		Log.i(TAG, "Adding...");
 		CategoryVO c = ModelUtilities.publicObjectToValueObject(object);

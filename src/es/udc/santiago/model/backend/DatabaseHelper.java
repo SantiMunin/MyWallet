@@ -105,18 +105,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	}
 
 	/**
-	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao
-	 * for our Category class. It will create it or just give the cached value.
-	 * RuntimeExceptionDao only through RuntimeExceptions.
-	 */
-	// TODO don't know what is this exactly
-	/*
-	 * public RuntimeExceptionDao<Category, Integer> getSimpleDataDao() { if
-	 * (simpleRuntimeDao == null) { simpleRuntimeDao =
-	 * getRuntimeExceptionDao(Category.class); } return simpleRuntimeDao; }
-	 */
-
-	/**
 	 * Close the database connections and clear any cached DAOs.
 	 */
 	@Override

@@ -30,6 +30,7 @@ import com.j256.ormlite.table.DatabaseTable;
  */
 @DatabaseTable(tableName = "categories")
 public class CategoryVO {
+	//TODO name as id?
 	@DatabaseField(generatedId = true)
 	private long id;
 	@DatabaseField(unique = true)
