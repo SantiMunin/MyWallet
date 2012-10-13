@@ -49,8 +49,7 @@ import es.udc.santiago.view.utils.ViewAllMovementsListAdapter;
  * @author Santiago Munín González
  * 
  */
-public class ViewAllMovementsActivity extends
-		SherlockListActivity {
+public class ViewAllMovementsActivity extends SherlockListActivity {
 	private static String TAG = "ViewAllMovementsActivity";
 
 	@Override
@@ -86,6 +85,7 @@ public class ViewAllMovementsActivity extends
 		}
 		return true;
 	}
+
 	/**
 	 * Fetches all movements from database and classify them. It receives an
 	 * Object array, the first element has to be a Calendar and the second has
@@ -105,11 +105,12 @@ public class ViewAllMovementsActivity extends
 			}
 			Calendar day = (Calendar) params[0];
 			Period period = (Period) params[1];
-			Log.i(TAG, "Fetching movements day: " + day.getTime().toGMTString()
+			Log.i(TAG, "Fetching movements day: " + day.getTime().toString()
 					+ " period: " + period.toString());
 			try {
-				return new CashFlowService(ModelUtilities.getHelper(getApplicationContext())).getAllWithFilter(day,
-						period, null, null);
+				return new CashFlowService(
+						ModelUtilities.getHelper(getApplicationContext()))
+						.getAllWithFilter(day, period, null, null);
 			} catch (SQLException e) {
 				Log.e(TAG, e.getMessage());
 				return new ArrayList<CashFlow>();
@@ -152,8 +153,7 @@ public class ViewAllMovementsActivity extends
 					period = getString(R.string.yearly);
 				}
 				map.put("period", period);
-				DateFormat df = DateFormat.getDateInstance(
-						DateFormat.SHORT);
+				DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 				map.put("date",
 						getString(R.string.date) + ": "
 								+ df.format(cashf.getDate()));

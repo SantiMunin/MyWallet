@@ -350,7 +350,7 @@ public class OverviewActivity extends SherlockFragmentActivity
 			}
 			Calendar day = GregorianCalendar.getInstance();
 			day.setTime(params[0].getTime());
-			Log.i(TAG, "Fetching movements day: " + day.getTime().toGMTString()
+			Log.i(TAG, "Fetching movements day: " + day.getTime().toString()
 					+ " period: " + period.toString());
 			return cashService.getAllWithFilter(day, period, null, null);
 		}
