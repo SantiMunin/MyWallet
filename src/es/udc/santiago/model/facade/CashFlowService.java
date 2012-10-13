@@ -52,7 +52,8 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		cashDao = dbHelper.getCashFlowDao();
 	}
 
-	public Long add(CashFlow object) {
+	@Override
+	public Long add(CashFlow object) throws DuplicateEntryException {
 		Log.i(TAG, "Adding...");
 		CashFlowVO c = ModelUtilities.publicObjectToValueObject(object);
 		if (c == null) {
@@ -62,8 +63,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			this.cashDao.create(c);
 			return c.getId();
 		} catch (SQLException e) {
-			Log.e(TAG, "Error adding cashflow.");
-			return null;
+			throw new DuplicateEntryException();
 		}
 	}
 

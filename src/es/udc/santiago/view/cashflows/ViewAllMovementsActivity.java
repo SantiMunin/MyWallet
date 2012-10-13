@@ -29,20 +29,13 @@ import java.util.Map;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import es.udc.santiago.R;
-import es.udc.santiago.model.exceptions.EntryNotFoundException;
 import es.udc.santiago.model.facade.CashFlow;
 import es.udc.santiago.model.facade.CashFlowService;
 import es.udc.santiago.model.facade.MovementType;
@@ -56,24 +49,13 @@ import es.udc.santiago.view.utils.ViewAllMovementsListAdapter;
  * @author Santiago Munín González
  * 
  */
-public class ViewAllMovementsActivity extends SherlockListActivity implements
-		OnItemClickListener {
+public class ViewAllMovementsActivity extends
+		SherlockListActivity {
 	private static String TAG = "ViewAllMovementsActivity";
-	private static final int CONTEXT_MENU_DELETE_ITEM = 1;
-	private static final int CONTEXT_MENU_UPDATE = 2;
-	private static final int CONTEXT_MENU_FINISH_PERIOD = 3;
-	private CashFlowService cashServ;
-	private List<CashFlow> cashFlows;
-	private SimpleAdapter listAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		try {
-			this.cashServ = new CashFlowService(ModelUtilities.getHelper(this));
-		} catch (SQLException e) {
-			Log.e(TAG, e.getMessage());
-		}
 		setContentView(R.layout.all_movements_list);
 		Calendar day = Calendar.getInstance();
 		Period period = Period.ONCE;
@@ -93,13 +75,10 @@ public class ViewAllMovementsActivity extends SherlockListActivity implements
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(R.string.movementsoverview);
-		ListView lv = getListView();
-		lv.setOnItemClickListener(this);
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
@@ -107,40 +86,6 @@ public class ViewAllMovementsActivity extends SherlockListActivity implements
 		}
 		return true;
 	}
-
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenu.ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.add(Menu.NONE, CONTEXT_MENU_DELETE_ITEM, Menu.NONE,
-				R.string.delete);
-		menu.add(Menu.NONE, CONTEXT_MENU_UPDATE, Menu.NONE, R.string.update);
-	}
-
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
-				.getMenuInfo();
-
-		switch (item.getItemId()) {
-		case CONTEXT_MENU_DELETE_ITEM:
-			try {
-				cashServ.delete(cashFlows.get(info.position).getId());
-				cashFlows.remove(info.position);
-				setListAdapter(buildAdapter(cashFlows));
-			} catch (EntryNotFoundException e) {
-				// Shouldn't reach here
-			}
-			return true;
-		case CONTEXT_MENU_UPDATE:
-			/*
-			 * Intent i = new Intent(getApplicationContext(),
-			 * EditCategoryActivity.class); i.putExtra("id",
-			 * list.get(id).getId()); startActivity(i); return (true);
-			 */
-		}
-		return false;
-	}
-
 	/**
 	 * Fetches all movements from database and classify them. It receives an
 	 * Object array, the first element has to be a Calendar and the second has
@@ -160,12 +105,11 @@ public class ViewAllMovementsActivity extends SherlockListActivity implements
 			}
 			Calendar day = (Calendar) params[0];
 			Period period = (Period) params[1];
-			Log.i(TAG, "Fetching movements day: " + day.getTime().toString()
+			Log.i(TAG, "Fetching movements day: " + day.getTime().toGMTString()
 					+ " period: " + period.toString());
 			try {
-				return new CashFlowService(
-						ModelUtilities.getHelper(getApplicationContext()))
-						.getAllWithFilter(day, period, null, null);
+				return new CashFlowService(ModelUtilities.getHelper(getApplicationContext())).getAllWithFilter(day,
+						period, null, null);
 			} catch (SQLException e) {
 				Log.e(TAG, e.getMessage());
 				return new ArrayList<CashFlow>();
@@ -175,63 +119,57 @@ public class ViewAllMovementsActivity extends SherlockListActivity implements
 		@Override
 		protected void onPostExecute(List<CashFlow> result) {
 			super.onPostExecute(result);
-			cashFlows = result;
-			setListAdapter(buildAdapter(result));
-			registerForContextMenu(getListView());
+			String[] from = new String[] { "category", "concept", "amount",
+					"date", "endDate", "period" };
+			int[] to = new int[] { R.id.mov_category, R.id.mov_concept,
+					R.id.mov_amount, R.id.mov_date, R.id.mov_until,
+					R.id.mov_period };
+			List<Map<String, String>> fillMaps = new LinkedList<Map<String, String>>();
+
+			for (CashFlow cashf : result) {
+				HashMap<String, String> map = new HashMap<String, String>();
+				if (cashf.getCategory() != null) {
+					map.put("category", cashf.getCategory().getName());
+				} else {
+					map.put("category", getString(R.string.other));
+				}
+				String concept = cashf.getConcept();
+				if (concept.length() > 0) {
+					map.put("concept", concept);
+				} else {
+					map.put("concept", "-----");
+				}
+				String amount = String.valueOf(cashf.getAmount());
+				if (cashf.getMovType() == MovementType.EXPENSE) {
+					amount = "-" + amount;
+				}
+				map.put("amount", amount);
+				String period = "";
+				if (cashf.getPeriod() == Period.MONTHLY) {
+					period = getString(R.string.monthly);
+				}
+				if (cashf.getPeriod() == Period.YEARLY) {
+					period = getString(R.string.yearly);
+				}
+				map.put("period", period);
+				DateFormat df = DateFormat.getDateInstance(
+						DateFormat.SHORT);
+				map.put("date",
+						getString(R.string.date) + ": "
+								+ df.format(cashf.getDate()));
+				if (cashf.getEndDate() != null) {
+					map.put("endDate",
+							getString(R.string.until) + ": "
+									+ df.format(cashf.getEndDate()));
+				}
+				fillMaps.add(map);
+			}
+
+			SimpleAdapter adapter = new ViewAllMovementsListAdapter(
+					getApplicationContext(), fillMaps,
+					R.layout.movements_list_item, from, to);
+			setListAdapter(adapter);
 		}
 
-	}
-
-	public SimpleAdapter buildAdapter(List<CashFlow> cashFlows) {
-		String[] from = new String[] { "category", "concept", "amount", "date",
-				"endDate", "period" };
-		int[] to = new int[] { R.id.mov_category, R.id.mov_concept,
-				R.id.mov_amount, R.id.mov_date, R.id.mov_until, R.id.mov_period };
-		List<Map<String, String>> fillMaps = new LinkedList<Map<String, String>>();
-
-		for (CashFlow cashf : cashFlows) {
-			HashMap<String, String> map = new HashMap<String, String>();
-			if (cashf.getCategory() != null) {
-				map.put("category", cashf.getCategory().getName());
-			} else {
-				map.put("category", getString(R.string.other));
-			}
-			String concept = cashf.getConcept();
-			if (concept.length() > 0) {
-				map.put("concept", concept);
-			} else {
-				map.put("concept", "-----");
-			}
-			String amount = String.valueOf(cashf.getAmount());
-			if (cashf.getMovType() == MovementType.EXPENSE) {
-				amount = "-" + amount;
-			}
-			map.put("amount", amount);
-			String period = "";
-			if (cashf.getPeriod() == Period.MONTHLY) {
-				period = getString(R.string.monthly);
-			}
-			if (cashf.getPeriod() == Period.YEARLY) {
-				period = getString(R.string.yearly);
-			}
-			map.put("period", period);
-			DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-			map.put("date",
-					getString(R.string.date) + ": "
-							+ df.format(cashf.getDate()));
-			if (cashf.getEndDate() != null) {
-				map.put("endDate",
-						getString(R.string.until) + ": "
-								+ df.format(cashf.getEndDate()));
-			}
-			fillMaps.add(map);
-		}
-		return new ViewAllMovementsListAdapter(getApplicationContext(),
-				fillMaps, R.layout.movements_list_item, from, to);
-
-	}
-
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		arg0.showContextMenuForChild(arg1);
 	}
 }

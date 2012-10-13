@@ -14,10 +14,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
 <resources>
-
     <string-array name="movementtypes">
         <item>Incomes</item>
         <item>Expenses</item>
@@ -28,10 +26,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <item>¥</item>
         <item>£</item>
     </string-array>
-    <string-array name="periods">
-        <item>Once</item>
-        <item>Monthly</item>
-        <item>Yearly</item>
-    </string-array>
-
 </resources>

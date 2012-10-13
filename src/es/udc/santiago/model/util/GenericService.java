@@ -31,6 +31,13 @@ import es.udc.santiago.model.exceptions.EntryNotFoundException;
  * @param <Entity>
  */
 public interface GenericService<PK extends Serializable, Entity> {
+	/**
+	 * Adds the entity.
+	 * @param object
+	 * @return Primary key asigned.
+	 * @throws SQLException 
+	 */
+	public PK add(Entity object) throws DuplicateEntryException;
 	
 	/**
 	 * Fetches the entity

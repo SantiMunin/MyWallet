@@ -63,8 +63,8 @@ public class ManageCategoriesActivity extends SherlockActivity {
 	private Button addButton;
 	private EditText catName;
 	// Menu
-	final static int CONTEXT_MENU_DELETE_ITEM = 1;
-	final static int CONTEXT_MENU_UPDATE = 2;
+	final int CONTEXT_MENU_DELETE_ITEM = 1;
+	final int CONTEXT_MENU_UPDATE = 2;
 
 	public void onCreate(Bundle savedInstanceState) {
 		try {
