@@ -14,13 +14,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <resources>
+
     <style name="AddOpTableRow">
         <item name="android:layout_marginBottom">5dp</item>
     </style>
+
     <style name="AddOpSpinner">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
 </resources>

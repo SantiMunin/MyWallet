@@ -143,7 +143,7 @@ public class AddOperationActivity extends SherlockActivity {
 						if (categoryName.length() > 0) {
 							// Tries to add the new category.
 							try {
-								Category c = new Category(-1,categoryName);
+								Category c = new Category(-1, categoryName);
 								catServ.add(c);
 								categoryList.add(c);
 								newCategory = categoryName;

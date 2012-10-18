@@ -14,18 +14,19 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.view.utils;
 
 import java.util.List;
 import java.util.Map;
+
+import es.udc.santiago.R;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
-import es.udc.santiago.R;
 
 public class ViewAllMovementsListAdapter extends SimpleAdapter {
 

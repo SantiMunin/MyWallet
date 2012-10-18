@@ -22,11 +22,12 @@ import java.util.Calendar;
 import java.util.Currency;
 import java.util.Locale;
 
+import es.udc.santiago.R;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
-import es.udc.santiago.R;
 
 /**
  * Activity utilities.

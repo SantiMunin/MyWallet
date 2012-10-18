@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -37,6 +35,10 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.googlecode.android.widgets.DateSlider.DateSlider;
+import com.googlecode.android.widgets.DateSlider.DefaultDateSlider;
+import com.googlecode.android.widgets.DateSlider.MonthYearDateSlider;
+import com.googlecode.android.widgets.DateSlider.YearDateSlider;
 
 import es.udc.santiago.R;
 import es.udc.santiago.model.facade.CashFlow;
@@ -47,23 +49,12 @@ import es.udc.santiago.model.util.ModelUtilities;
 import es.udc.santiago.view.categories.ManageCategoriesActivity;
 import es.udc.santiago.view.utils.ViewUtils;
 
-public class OverviewActivity extends SherlockFragmentActivity
-		implements com.actionbarsherlock.app.ActionBar.TabListener {
+public class OverviewActivity extends SherlockFragmentActivity implements
+		com.actionbarsherlock.app.ActionBar.TabListener {
 	private static final String TAG = "OverviewActivity";
 	private static final int DATE_PICKER_DIALOG = 1;
 	private static final int DIALOG_SELECT_CURRENCY = 2;
 	private static final int TOP_CATEGORIES_MAX = 5;
-
-	private DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
-		@Override
-		public void onDateSet(DatePicker view, int year, int monthOfYear,
-				int dayOfMonth) {
-			day = new GregorianCalendar(year, monthOfYear, dayOfMonth);
-			dayButton.setText(DateFormat.getDateInstance()
-					.format(day.getTime()));
-			new GetMovementsTask().execute(day);
-		}
-	};
 
 	private Button dayButton;
 	private Calendar day;
@@ -112,8 +103,10 @@ public class OverviewActivity extends SherlockFragmentActivity
 		dayButton.setText(getString(R.string.today));
 		dayButton.setOnClickListener(new OnClickListener() {
 
+			@SuppressWarnings("deprecation")
 			@Override
 			public void onClick(View v) {
+				Log.d(TAG, "Showing dialog");
 				showDialog(DATE_PICKER_DIALOG);
 			}
 		});
@@ -215,17 +208,30 @@ public class OverviewActivity extends SherlockFragmentActivity
 		return builder.create();
 	}
 
+	private DateSlider.OnDateSetListener mDateSetListener = new DateSlider.OnDateSetListener() {
+		public void onDateSet(DateSlider view, Calendar selectedDate) {
+			day = selectedDate;
+			dayButton.setText(DateFormat.getDateInstance()
+					.format(day.getTime()));
+			new GetMovementsTask().execute(day);
+		}
+	};
+
 	/**
 	 * Dialogs
 	 */
 	protected Dialog onCreateDialog(int id) {
-		Calendar d = GregorianCalendar.getInstance();
-
 		switch (id) {
 		case DATE_PICKER_DIALOG:
-			return new DatePickerDialog(this, dateListener,
-					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
-					d.get(Calendar.DATE));
+			if (period == Period.ONCE) {
+				return new DefaultDateSlider(this, mDateSetListener, day);
+			}
+			if (period == Period.MONTHLY) {
+				return new MonthYearDateSlider(this, mDateSetListener, day);
+			}
+			if (period == Period.YEARLY) {
+				return new YearDateSlider(this, mDateSetListener, day);
+			}
 		case DIALOG_SELECT_CURRENCY:
 			return getSelectCurrencyDialog();
 		}
