@@ -226,15 +226,12 @@ public class OverviewActivity extends SherlockFragmentActivity implements
 		case DATE_PICKER_DIALOG:
 			Dialog d = null;
 			if (period == Period.ONCE) {
-				Log.d(TAG, "Default");
 				d = new DefaultDateSlider(this, mDateSetListener, day);
 			}
 			if (period == Period.MONTHLY) {
-				Log.d(TAG, "Month");
 				d = new MonthYearDateSlider(this, mDateSetListener, day);
 			}
 			if (period == Period.YEARLY) {
-				Log.d(TAG, "YEar");
 				d = new YearDateSlider(this, mDateSetListener, day);
 			}
 			// TODO check a better way of doing this (onpreparatedialog)
@@ -448,15 +445,12 @@ public class OverviewActivity extends SherlockFragmentActivity implements
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		switch (tab.getPosition()) {
 		case 0:
-			Log.d(TAG, "Setting period to ONCE");
 			period = Period.ONCE;
 			break;
 		case 1:
-			Log.d(TAG, "Setting period to MONTHLY");
 			period = Period.MONTHLY;
 			break;
 		case 2:
-			Log.d(TAG, "Setting period to YEARLY");
 			period = Period.YEARLY;
 			break;
 		}
