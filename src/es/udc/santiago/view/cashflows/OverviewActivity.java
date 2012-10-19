@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -223,15 +224,29 @@ public class OverviewActivity extends SherlockFragmentActivity implements
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case DATE_PICKER_DIALOG:
+			Dialog d = null;
 			if (period == Period.ONCE) {
-				return new DefaultDateSlider(this, mDateSetListener, day);
+				Log.d(TAG, "Default");
+				d = new DefaultDateSlider(this, mDateSetListener, day);
 			}
 			if (period == Period.MONTHLY) {
-				return new MonthYearDateSlider(this, mDateSetListener, day);
+				Log.d(TAG, "Month");
+				d = new MonthYearDateSlider(this, mDateSetListener, day);
 			}
 			if (period == Period.YEARLY) {
-				return new YearDateSlider(this, mDateSetListener, day);
+				Log.d(TAG, "YEar");
+				d = new YearDateSlider(this, mDateSetListener, day);
 			}
+			// TODO check a better way of doing this (onpreparatedialog)
+			d.setOnDismissListener(new OnDismissListener() {
+
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					removeDialog(DATE_PICKER_DIALOG);
+
+				}
+			});
+			return d;
 		case DIALOG_SELECT_CURRENCY:
 			return getSelectCurrencyDialog();
 		}
@@ -239,6 +254,7 @@ public class OverviewActivity extends SherlockFragmentActivity implements
 		return null;
 	}
 
+	// TODO onpreparatedialog?
 	/**
 	 * Calculates and displays top categories.
 	 * 
@@ -432,12 +448,15 @@ public class OverviewActivity extends SherlockFragmentActivity implements
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
 		switch (tab.getPosition()) {
 		case 0:
+			Log.d(TAG, "Setting period to ONCE");
 			period = Period.ONCE;
 			break;
 		case 1:
+			Log.d(TAG, "Setting period to MONTHLY");
 			period = Period.MONTHLY;
 			break;
 		case 2:
+			Log.d(TAG, "Setting period to YEARLY");
 			period = Period.YEARLY;
 			break;
 		}
