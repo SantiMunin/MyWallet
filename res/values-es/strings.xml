@@ -71,9 +71,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="select_currency">Seleccionar moneda</string>
     <string name="from">Desde</string>
 
-    <color name="green">#00FF00</color>
-    <color name="light_green">#1AAB48</color>
-    <color name="red">#FF0000</color>
-    <color name="light_red">#FF8888</color>
-
 </resources>

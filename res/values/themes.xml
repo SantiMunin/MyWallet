@@ -5,8 +5,6 @@
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="actionBarTabStyle">@style/Widget.Sherlock.Light.ActionBar.TabView</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
-        <item name="android:listViewStyle">@style/MyListView</item>
     </style>
 
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -14,12 +12,12 @@
         <item name="android:background">@drawable/background</item>
     </style>
 
-    <style name="MyTextViewStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/text</item>
+    <style name="ListMovementsText" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="MyListView" parent="@android:style/Widget.ListView">
-        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+    <style name="AddOpTableRow">
+        <item name="android:layout_marginBottom">5dp</item>
     </style>
 
 </resources>

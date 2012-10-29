@@ -248,7 +248,7 @@ public class AddOperationActivity extends SherlockActivity {
 		concept = (EditText) findViewById(R.id.addOp_conceptEntry);
 		movementType = (Spinner) findViewById(R.id.addOp_movTypeSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-				getApplicationContext(), R.array.movementtypes,
+				this, R.array.movementtypes,
 				android.R.layout.simple_spinner_item);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		movementType.setAdapter(adapter);
@@ -339,17 +339,12 @@ public class AddOperationActivity extends SherlockActivity {
 	}
 
 	protected void configurePeriodSpinner() {
+		// TODO here's the problem, change text color
 		period = (Spinner) findViewById(R.id.addOp_periodSpinner);
-		List<String> data = new ArrayList<String>();
-		// FIX ME
-		data.add(getString(R.string.once));
-		data.add(getString(R.string.monthly));
-		data.add(getString(R.string.yearly));
-		ArrayAdapter<String> stringAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_spinner_item, data);
-		stringAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		period.setAdapter(stringAdapter);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+				this, R.array.periods, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		period.setAdapter(adapter);
 		period.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override

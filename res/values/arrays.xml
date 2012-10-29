@@ -20,6 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
         <item>Incomes</item>
         <item>Expenses</item>
     </string-array>
+    <string-array name="periods">
+        <item>Single</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
     <string-array name="currency">
         <item>€</item>
         <item>$</item>

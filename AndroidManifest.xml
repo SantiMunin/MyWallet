@@ -14,14 +14,15 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="es.udc.santiago"
     android:versionCode="1"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="5"
         android:targetSdkVersion="15" />
     <!-- JUnit -->
     <instrumentation
@@ -42,10 +43,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.categories.ManageCategoriesActivity" />
+        <activity
+            android:name=".view.categories.ManageCategoriesActivity"
+            android:windowSoftInputMode="stateHidden" />
         <activity android:name=".view.categories.EditCategoryActivity" />
-        <activity android:name=".view.cashflows.AddOperationActivity" />
-        <activity android:name=".view.cashflows.ViewAllMovementsActivity"/>
+        <activity
+            android:name=".view.cashflows.AddOperationActivity"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".view.cashflows.EditOperationActivity" />
+        <activity android:name=".view.cashflows.ViewAllMovementsActivity" />
     </application>
 
 </manifest>

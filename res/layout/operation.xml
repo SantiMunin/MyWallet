@@ -58,8 +58,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="text" >
-
-                <requestFocus />
             </EditText>
         </TableRow>
 
@@ -75,7 +73,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
             <Spinner
                 android:id="@+id/addOp_movTypeSpinner"
-                style="@style/AddOpSpinner"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
         </TableRow>

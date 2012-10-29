@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_concept"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_category"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/mov_concept"
@@ -43,7 +43,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_amount"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mov_category"
@@ -53,7 +53,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_period"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -64,7 +64,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_until"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mov_period"
@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <TextView
         android:id="@+id/mov_date"
-        style="@style/MyTextViewStyle"
+        style="@style/ListMovementsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/mov_concept"
