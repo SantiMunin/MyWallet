@@ -373,24 +373,30 @@ public class AddOperationActivity extends SherlockActivity {
 
 	}
 
-	protected void checkInputErrors() {
+	/**
+	 * Checks if all required fills were covered.
+	 * 
+	 * @return <b>true</b> if the input is ok, otherwise <b>false</b>
+	 */
+	protected boolean checkCorrectOperationData() {
 		if (!checkRequiredFieldsFilled()) {
 			Toast.makeText(getApplicationContext(),
 					R.string.error_fieldsNotFilled, Toast.LENGTH_SHORT).show();
-			return;
+			return false;
 		}
 		if (category.getSelectedItemPosition() < 0 || categoryList.size() == 0) {
 			Toast.makeText(getApplicationContext(),
 					R.string.not_category_selected, Toast.LENGTH_SHORT).show();
-			return;
+			return false;
 		}
 		try {
 			Float.valueOf(amount.getText().toString());
 		} catch (NumberFormatException nfe) {
 			Toast.makeText(getApplicationContext(), R.string.bad_amount,
 					Toast.LENGTH_SHORT).show();
-			return;
+			return false;
 		}
+		return true;
 	}
 
 	protected void setButtonOperation() {
@@ -398,7 +404,9 @@ public class AddOperationActivity extends SherlockActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				checkInputErrors();
+				if (!checkCorrectOperationData()) {
+					return;
+				}
 				Period p = Period.getFromCode(period.getSelectedItemPosition());
 				MovementType mov = MovementType.getFromCode(movementType
 						.getSelectedItemPosition());
