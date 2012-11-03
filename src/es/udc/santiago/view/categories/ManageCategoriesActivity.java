@@ -21,7 +21,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Intent;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -55,8 +57,9 @@ import es.udc.santiago.model.util.ModelUtilities;
  */
 public class ManageCategoriesActivity extends SherlockActivity {
 	private static final String TAG = "ManageCategoriesActivity";
+	private static final int EDIT_CATEGORY_DIALOG_ID = 0;
 	private CategoryService catServ;
-	List<Category> list;
+	private List<Category> list;
 	// Views
 	private ListView listView;
 	private ArrayAdapter<String> listViewAdapter;
@@ -65,6 +68,14 @@ public class ManageCategoriesActivity extends SherlockActivity {
 	// Menu
 	final int CONTEXT_MENU_DELETE_ITEM = 1;
 	final int CONTEXT_MENU_UPDATE = 2;
+	// Dialog
+	private OnDismissListener editCategoryNameListener = new OnDismissListener() {
+
+		@Override
+		public void onDismiss(DialogInterface dialog) {
+			fillCategories();
+		}
+	};
 
 	public void onCreate(Bundle savedInstanceState) {
 		try {
@@ -86,10 +97,9 @@ public class ManageCategoriesActivity extends SherlockActivity {
 							catServ.add(c);
 							fillCategories();
 						} catch (DuplicateEntryException e) {
-							// TODO text
 							Toast.makeText(getApplicationContext(),
-									"It already exists", Toast.LENGTH_SHORT)
-									.show();
+									R.string.category_name_exists,
+									Toast.LENGTH_SHORT).show();
 						}
 					}
 				}
@@ -169,12 +179,59 @@ public class ManageCategoriesActivity extends SherlockActivity {
 			}
 			return (true);
 		case CONTEXT_MENU_UPDATE:
-			Intent i = new Intent(getApplicationContext(),
-					EditCategoryActivity.class);
-			i.putExtra("id", list.get(id).getId());
-			startActivity(i);
+			Bundle b = new Bundle();
+			b.putLong("id", list.get(id).getId());
+			showDialog(EDIT_CATEGORY_DIALOG_ID, b);
 			return (true);
 		}
 		return (super.onOptionsItemSelected(item));
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id, Bundle args) {
+		if (id == EDIT_CATEGORY_DIALOG_ID) {
+			return getEditCategoryDialog(args);
+		}
+		return null;
+	}
+
+	/**
+	 * Created the "edit category" dialog.
+	 * 
+	 * @param arg
+	 *            A Bundle object with a Long value ("id").
+	 * @return Dialog.
+	 */
+	protected Dialog getEditCategoryDialog(final Bundle args) {
+		final Dialog dialog = new Dialog(this);
+
+		dialog.setContentView(R.layout.category_dialog);
+		Button confirm = (Button) dialog.findViewById(R.id.dialog_cat_button);
+		confirm.setText(getString(R.string.edit));
+		dialog.setTitle(getString(R.string.new_category_dialog));
+		confirm.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String categoryName = ((EditText) dialog
+						.findViewById(R.id.dialog_category_name)).getText()
+						.toString();
+				if (categoryName.length() > 0) {
+					// Tries to add the new category.
+					try {
+						long id = args.getLong("id", -1);
+						Category c = new Category(id, categoryName);
+						catServ.update(c);
+						dialog.dismiss();
+					} catch (Exception e) {
+						Toast.makeText(getApplicationContext(),
+								getString(R.string.error_cat_alreadyExists),
+								Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+		});
+		dialog.setOnDismissListener(this.editCategoryNameListener);
+		return dialog;
 	}
 }

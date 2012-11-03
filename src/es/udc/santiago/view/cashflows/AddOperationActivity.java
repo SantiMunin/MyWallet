@@ -130,9 +130,9 @@ public class AddOperationActivity extends SherlockActivity {
 	protected Dialog getNewCategoryDialog() {
 		final Dialog dialog = new Dialog(this);
 
-		dialog.setContentView(R.layout.add_category_dialog);
+		dialog.setContentView(R.layout.category_dialog);
 		dialog.setTitle(getString(R.string.new_category_dialog));
-		((Button) dialog.findViewById(R.id.dialog_add_cat_button))
+		((Button) dialog.findViewById(R.id.dialog_cat_button))
 				.setOnClickListener(new OnClickListener() {
 
 					@Override

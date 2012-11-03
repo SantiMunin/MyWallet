@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.   -->
         android:inputType="text" />
 
     <Button
-        android:id="@+id/dialog_add_cat_button"
+        android:id="@+id/dialog_cat_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
