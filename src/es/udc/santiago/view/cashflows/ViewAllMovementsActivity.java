@@ -80,10 +80,6 @@ public class ViewAllMovementsActivity extends SherlockListActivity {
 		if (extras != null) {
 			day.setTimeInMillis(extras.getLong("startDayMilliseconds"));
 			period = Period.getFromCode(extras.getInt("periodCode"));
-			Object[] params = new Object[2];
-			params[0] = day;
-			params[1] = period;
-			new GetMovementsTask().execute(params);
 		} else {
 			Log.e(TAG, "Shouldn't reach here");
 			return;
@@ -92,6 +88,15 @@ public class ViewAllMovementsActivity extends SherlockListActivity {
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setTitle(R.string.movementsoverview);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Object[] params = new Object[2];
+		params[0] = day;
+		params[1] = period;
+		new GetMovementsTask().execute(params);
 	}
 
 	@Override

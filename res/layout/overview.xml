@@ -104,7 +104,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </TableRow>
         </TableLayout>
 
-
         <TableLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -226,4 +225,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </TableRow>
         </TableLayout>
     </LinearLayout>
+
 </ScrollView>

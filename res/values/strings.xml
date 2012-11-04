@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="id">Id</string>
     <string name="name">Name</string>
     <string name="error_empty">Empty field</string>
-    <string name="error_notExists">Couldn\'t found an item with the given id.</string>
+    <string name="error_not_exists">Selected item doesn\'t exists.</string>
+    <string name="error_already_exists">An item with same information already exists.</string>
     <string name="error_cat_alreadyExists">A category with that name already exists.</string>
     <string name="error_addingCashFlow">There was a problem adding the operation.</string>
     <string name="category">Category</string>
@@ -73,5 +74,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <string name="edit_operation">Edit operation</string>
     <string name="edit">Edit</string>
     <string name="category_name_exists">A category with that name already exists.</string>
+    <string name="updated">Updated</string>
 
 </resources>
