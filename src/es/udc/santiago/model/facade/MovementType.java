@@ -31,13 +31,13 @@ public enum MovementType {
 	}
 
 	/**
-	 * A little trick to help DB use.
+	 * Numeric value.
 	 */
 	private int value;
 
 	/**
 	 * 
-	 * @return associated value.
+	 * @return associated numeric value.
 	 */
 	public int getValue() {
 		return this.value;

@@ -19,7 +19,7 @@ package es.udc.santiago.model.facade;
 
 
 /**
- * This class defines a value object of "Category".
+ * Movement category.
  * 
  * @author Santiago Munín González
  * 
@@ -63,5 +63,4 @@ public class Category implements Comparable<Category> {
 		String name2 = arg0.getName();
 		return (this.name.compareTo(name2));
 	}
-	
 }

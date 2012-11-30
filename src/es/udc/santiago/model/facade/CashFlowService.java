@@ -38,7 +38,7 @@ import es.udc.santiago.model.util.GenericService;
 import es.udc.santiago.model.util.ModelUtilities;
 
 /**
- * Specifies methods for processing cashflows.
+ * Specifies methods which process cashflows.
  * 
  * @author Santiago Munín González
  * 
@@ -52,19 +52,19 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		cashDao = dbHelper.getCashFlowDao();
 	}
 
-	
 	public Long add(CashFlow object) {
 		Log.i(TAG, "Adding...");
-		CashFlowVO c = ModelUtilities.publicObjectToValueObject(object);
-		if (c == null) {
+		CashFlowVO cashFlowValueObj = ModelUtilities
+				.cashFlowPublicObjToValueObj(object);
+		if (cashFlowValueObj == null) {
 			return (long) -1;
 		}
 		try {
-			this.cashDao.create(c);
-			return c.getId();
+			this.cashDao.create(cashFlowValueObj);
+			return cashFlowValueObj.getId();
 		} catch (SQLException e) {
-			//TODO improve
-			throw new Error();
+			// TODO improve
+			throw new RuntimeException();
 		}
 	}
 
@@ -76,10 +76,9 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			fetched = this.cashDao.queryForId(key);
 			this.cashDao.refresh(fetched);
 		} catch (SQLException e) {
-			fetched = null;
+			throw new EntryNotFoundException();
 		}
-
-		return ModelUtilities.valueObjectToPublicObject(fetched);
+		return ModelUtilities.cashFlowValueObjToPublicObj(fetched);
 	}
 
 	@Override
@@ -90,12 +89,12 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			list = this.cashDao.queryForAll();
 			List<CashFlow> res = new ArrayList<CashFlow>();
 			for (CashFlowVO cashFlowVO : list) {
-				res.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
+				res.add(ModelUtilities.cashFlowValueObjToPublicObj(cashFlowVO));
 			}
 			return res;
 		} catch (SQLException e) {
 			Log.e(TAG, e.getMessage());
-			return null;
+			throw new RuntimeException();
 		}
 	}
 
@@ -104,7 +103,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 			DuplicateEntryException {
 		Log.i(TAG, "Updating...");
 		CashFlowVO updateObject = ModelUtilities
-				.publicObjectToValueObject(object);
+				.cashFlowPublicObjToValueObj(object);
 		if (updateObject != null) {
 			try {
 				this.cashDao.update(updateObject);
@@ -134,6 +133,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		}
 	}
 
+	//TODO improve the code below
 	/**
 	 * Fetches cashflows from DB, setting the filters from arguments. Set null
 	 * if you want avoid it.
@@ -339,7 +339,7 @@ public class CashFlowService implements GenericService<Long, CashFlow> {
 		}
 		List<CashFlow> result = new LinkedList<CashFlow>();
 		for (CashFlowVO cashFlowVO : cashDao.query(where.prepare())) {
-			result.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
+			result.add(ModelUtilities.cashFlowValueObjToPublicObj(cashFlowVO));
 		}
 		where.clear();
 		cashDao.queryBuilder().clear();

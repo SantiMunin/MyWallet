@@ -19,10 +19,8 @@ package es.udc.santiago.model.facade;
 
 import java.util.Date;
 
-import es.udc.santiago.model.util.ModelUtilities;
-
 /**
- * Reprensent any cash movement.
+ * Represents any cash movement.
  * 
  * @author Santiago Munín González
  * 
@@ -116,28 +114,7 @@ public class CashFlow {
 	public boolean equals(Object o) {
 		if (o instanceof CashFlow) {
 			CashFlow c1 = (CashFlow) o;
-			if (c1.getAmount() != this.amount) {
-				return false;
-			}
-			if (c1.getCategory().getId() != this.category.getId()) {
-				return false;
-			}
-			if (c1.getConcept() != this.concept) {
-				return false;
-			}
-			if (!ModelUtilities.compareDates(c1.getDate(), this.date)) {
-				return false;
-			}
-			if (!ModelUtilities.compareDates(c1.getEndDate(), this.endDate)) {
-				return false;
-			}
-			if (c1.getMovType() != this.movType) {
-				return false;
-			}
-			if (c1.getPeriod() != this.period) {
-				return false;
-			}
-			return true;
+			return c1.getId() == this.getId();
 		} else {
 			return false;
 		}

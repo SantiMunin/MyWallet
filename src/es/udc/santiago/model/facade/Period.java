@@ -14,11 +14,11 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.   
-*/
+ */
 package es.udc.santiago.model.facade;
 
 /**
- * A simple enum which represents different types o cash movements.
+ * Different types of cash movements.
  * 
  * @author Santiago Munín González
  * 
@@ -27,16 +27,19 @@ public enum Period {
 	ONCE(0), MONTHLY(1), YEARLY(2);
 
 	private int code;
+
 	/**
 	 * It builds a Period with a code.
+	 * 
 	 * @param code
 	 */
 	private Period(int code) {
 		this.code = code;
 	}
+
 	/**
 	 * 
-	 * @return the code.
+	 * @return Period's numeric code.
 	 */
 	public int getCode() {
 		return code;
@@ -45,7 +48,8 @@ public enum Period {
 	/**
 	 * 
 	 * @param code
-	 * @return The Period object mapped to the given code, or <b>null</b> if doesn't exists.
+	 * @return The Period object mapped to the given code, or <b>null</b> if
+	 *         doesn't exists.
 	 */
 	public static Period getFromCode(int code) {
 		switch (code) {

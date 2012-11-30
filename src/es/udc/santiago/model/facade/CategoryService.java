@@ -33,7 +33,7 @@ import es.udc.santiago.model.util.GenericService;
 import es.udc.santiago.model.util.ModelUtilities;
 
 /**
- * Specifies methods to processing categories.
+ * Specifies methods which process categories.
  * 
  * @author Santiago Munín González
  * 
@@ -50,7 +50,7 @@ public class CategoryService implements GenericService<Long, Category> {
 	@Override
 	public Long add(Category object) throws DuplicateEntryException {
 		Log.i(TAG, "Adding...");
-		CategoryVO c = ModelUtilities.publicObjectToValueObject(object);
+		CategoryVO c = ModelUtilities.categoryPublicObjToValueObj(object);
 		if (c == null) {
 			return (long) -1;
 		}
@@ -71,7 +71,7 @@ public class CategoryService implements GenericService<Long, Category> {
 		} catch (SQLException e) {
 			fetched = null;
 		}
-		return ModelUtilities.valueObjectToPublicObject(fetched);
+		return ModelUtilities.categoryValueObjToPublicObj(fetched);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class CategoryService implements GenericService<Long, Category> {
 			list = this.catDao.queryForAll();
 			List<Category> res = new ArrayList<Category>();
 			for (CategoryVO cashFlowVO : list) {
-				res.add(ModelUtilities.valueObjectToPublicObject(cashFlowVO));
+				res.add(ModelUtilities.categoryValueObjToPublicObj(cashFlowVO));
 			}
 			return res;
 		} catch (SQLException e) {
@@ -95,7 +95,7 @@ public class CategoryService implements GenericService<Long, Category> {
 	public void update(Category object) throws EntryNotFoundException, DuplicateEntryException {
 		Log.i(TAG, "Updating...");
 		CategoryVO updateObject = ModelUtilities
-				.publicObjectToValueObject(object);
+				.categoryPublicObjToValueObj(object);
 		if (updateObject != null) {
 			//Checks if exists a category with the same name
 			if (exists(object)) {
