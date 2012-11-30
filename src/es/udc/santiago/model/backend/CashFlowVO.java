@@ -24,7 +24,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 /**
- * Class of value object CashFlow.
+ * Represens the CashFlow's value object.
  * 
  * @author Santiago Munín González
  * 
