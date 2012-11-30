@@ -23,9 +23,6 @@ package es.udc.santiago.model.exceptions;
  */
 public class EntryNotFoundException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1387188014454944999L;
 
 }

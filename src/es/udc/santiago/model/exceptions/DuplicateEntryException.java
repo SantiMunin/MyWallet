@@ -23,9 +23,6 @@ package es.udc.santiago.model.exceptions;
  */
 public class DuplicateEntryException extends Exception{
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2093194542732046023L;
 
 }
