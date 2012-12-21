@@ -26,7 +26,6 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -38,7 +37,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TableRow;
@@ -48,6 +46,10 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.googlecode.android.widgets.DateSlider.DateSlider;
+import com.googlecode.android.widgets.DateSlider.DefaultDateSlider;
+import com.googlecode.android.widgets.DateSlider.MonthYearDateSlider;
+import com.googlecode.android.widgets.DateSlider.YearDateSlider;
 
 import es.udc.santiago.R;
 import es.udc.santiago.model.facade.CashFlow;
@@ -57,7 +59,6 @@ import es.udc.santiago.model.facade.CategoryService;
 import es.udc.santiago.model.facade.MovementType;
 import es.udc.santiago.model.facade.Period;
 import es.udc.santiago.model.util.ModelUtilities;
-import es.udc.santiago.view.utils.ViewUtils;
 
 /**
  * From this activity users will be able to insert expenses or incomes.
@@ -79,19 +80,20 @@ public class AddOperationActivity extends SherlockActivity {
 	protected int endDateMonth = -1;
 	protected int endDateDay = -1;
 	protected OnDismissListener newCategoryAdded;
-	protected DatePickerDialog.OnDateSetListener dateListener;
-	protected DatePickerDialog.OnDateSetListener endDateListener;
 	protected List<Category> categoryList;
 	protected Spinner category;
 	protected EditText concept;
 	protected Spinner movementType;
 	protected Spinner period;
+	protected Period currentPeriod;
 	protected EditText amount;
 	protected Button button;
 	protected CategoryService catServ;
 	protected CashFlowService cashServ;
 	protected Button dateButton;
 	protected Button endDateButton;
+	protected DateSlider.OnDateSetListener mDateSetListener;
+	protected DateSlider.OnDateSetListener mEndDateSetListener;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,6 +107,7 @@ public class AddOperationActivity extends SherlockActivity {
 			return;
 		}
 		initializeViews();
+		currentPeriod = Period.ONCE;
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setHomeButtonEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -161,6 +164,22 @@ public class AddOperationActivity extends SherlockActivity {
 		return dialog;
 	}
 
+	protected Dialog getDateDialog(DateSlider.OnDateSetListener listener) {
+		if (currentPeriod == Period.ONCE) {
+			return new DefaultDateSlider(this, listener, new GregorianCalendar(
+					dateYear, dateMonth, dateDay));
+		}
+		if (currentPeriod == Period.MONTHLY) {
+			return new MonthYearDateSlider(this, listener,
+					new GregorianCalendar(dateYear, dateMonth, dateDay));
+		}
+		if (currentPeriod == Period.YEARLY) {
+			return new YearDateSlider(this, listener, new GregorianCalendar(
+					dateYear, dateMonth, dateDay));
+		}
+		return null;
+	}
+
 	/**
 	 * Date picker's dialogs
 	 */
@@ -169,14 +188,10 @@ public class AddOperationActivity extends SherlockActivity {
 
 		switch (id) {
 		case DATE_DIALOG_ID:
-			return new DatePickerDialog(this, dateListener,
-					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
-					d.get(Calendar.DATE));
+			return getDateDialog(mDateSetListener);
 
 		case END_DATE_DIALOG_ID:
-			return new DatePickerDialog(this, endDateListener,
-					d.get(Calendar.YEAR), d.get(Calendar.MONTH),
-					d.get(Calendar.DATE));
+			return getDateDialog(mEndDateSetListener);
 
 		case NEW_CATEGORY_DIALOG_ID:
 			return getNewCategoryDialog();
@@ -281,45 +296,28 @@ public class AddOperationActivity extends SherlockActivity {
 				fillCategorySpinner();
 			}
 		};
-		dateListener = new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear,
-					int dayOfMonth) {
-				dateYear = year;
-				dateMonth = monthOfYear;
-				dateDay = dayOfMonth;
-				Calendar d = new GregorianCalendar(year, monthOfYear,
-						dayOfMonth);
-				if (ViewUtils.isSameDay(d, Calendar.getInstance())) {
-					dateButton.setText(getString(R.string.today));
-				} else {
-					dateButton.setText(DateFormat.getDateInstance().format(
-							d.getTime()));
-				}
-			}
-		};
-		endDateListener = new DatePickerDialog.OnDateSetListener() {
-			@Override
-			public void onDateSet(DatePicker view, int year, int monthOfYear,
-					int dayOfMonth) {
-				endDateYear = year;
-				endDateMonth = monthOfYear;
-				endDateDay = dayOfMonth;
-				Calendar endDate = new GregorianCalendar(year, monthOfYear,
-						dayOfMonth);
-				endDateButton.setText(DateFormat.getDateInstance().format(
-						endDate.getTime()));
-			}
-		};
-	}
+		mDateSetListener = new DateSlider.OnDateSetListener() {
 
-	/**
-	 * Initializes date pickers.
-	 */
-	protected void initializeDatePickers() {
-		dateYear = Calendar.getInstance().get(Calendar.YEAR);
-		dateMonth = Calendar.getInstance().get(Calendar.MONTH);
-		dateDay = Calendar.getInstance().get(Calendar.DATE);
+			@Override
+			public void onDateSet(DateSlider view, Calendar selectedDate) {
+				dateDay = selectedDate.get(Calendar.DATE);
+				dateMonth = selectedDate.get(Calendar.MONTH);
+				dateYear = selectedDate.get(Calendar.YEAR);
+				dateButton.setText(DateFormat.getDateInstance().format(
+						selectedDate.getTime()));
+			}
+		};
+		mEndDateSetListener = new DateSlider.OnDateSetListener() {
+
+			@Override
+			public void onDateSet(DateSlider view, Calendar selectedDate) {
+				endDateDay = selectedDate.get(Calendar.DATE);
+				endDateMonth = selectedDate.get(Calendar.MONTH);
+				endDateYear = selectedDate.get(Calendar.YEAR);
+				endDateButton.setText(DateFormat.getDateInstance().format(
+						selectedDate.getTime()));
+			}
+		};
 		dateButton = (Button) findViewById(R.id.addOp_dateButton);
 		dateButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -335,11 +333,18 @@ public class AddOperationActivity extends SherlockActivity {
 				showDialog(END_DATE_DIALOG_ID);
 			}
 		});
+	}
 
+	/**
+	 * Initializes date pickers.
+	 */
+	protected void initializeDatePickers() {
+		dateYear = Calendar.getInstance().get(Calendar.YEAR);
+		dateMonth = Calendar.getInstance().get(Calendar.MONTH);
+		dateDay = Calendar.getInstance().get(Calendar.DATE);
 	}
 
 	protected void configurePeriodSpinner() {
-		// TODO here's the problem, change text color
 		period = (Spinner) findViewById(R.id.addOp_periodSpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
 				this, R.array.periods, android.R.layout.simple_spinner_item);
@@ -356,12 +361,15 @@ public class AddOperationActivity extends SherlockActivity {
 							.setVisibility(View.GONE);
 					((TextView) findViewById(R.id.label_date))
 							.setText(getString(R.string.date));
+					currentPeriod = Period.ONCE;
 					break;
 				default:
 					((TableRow) findViewById(R.id.addOp_endDateRow))
 							.setVisibility(View.VISIBLE);
 					((TextView) findViewById(R.id.label_date))
 							.setText(getString(R.string.from));
+					currentPeriod = Period.getFromCode(arg0
+							.getSelectedItemPosition());
 					break;
 				}
 			}
