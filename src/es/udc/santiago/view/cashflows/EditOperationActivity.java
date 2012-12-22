@@ -55,7 +55,8 @@ public class EditOperationActivity extends AddOperationActivity {
 	private void update() {
 		checkCorrectOperationData();
 		this.data.setAmount(Float.valueOf(this.amount.getText().toString()));
-		// this.data.setCategory(category)
+		Category c = categoryList.get(category.getSelectedItemPosition());
+		this.data.setCategory(c);
 		this.data.setConcept(this.concept.getText().toString());
 		Calendar date = new GregorianCalendar(dateYear, dateMonth, dateDay);
 		this.data.setDate(date.getTime());
@@ -69,6 +70,8 @@ public class EditOperationActivity extends AddOperationActivity {
 				endDateYear, endDateMonth, endDateDay) : null;
 		if (endDate != null) {
 			this.data.setEndDate(endDate.getTime());
+		} else {
+			this.data.setEndDate(null);
 		}
 		try {
 			this.cashServ.update(this.data);
@@ -86,9 +89,10 @@ public class EditOperationActivity extends AddOperationActivity {
 	private void fillViewsWithData() {
 		this.amount.setText(String.valueOf(data.getAmount()));
 		this.concept.setText(this.data.getConcept());
+		period.setSelection(this.data.getPeriod().getCode());
 		this.dateButton.setText(DateFormat.getDateInstance().format(
 				this.data.getDate().getTime()));
-		if (!(data.getPeriod() == Period.ONCE)) {
+		if (!(data.getPeriod() == Period.ONCE) && this.data.getEndDate() != null) {
 			endDateButton.setText(DateFormat.getDateInstance().format(
 					this.data.getEndDate().getTime()));
 			if (data.getPeriod() == Period.MONTHLY) {
@@ -110,6 +114,7 @@ public class EditOperationActivity extends AddOperationActivity {
 			}
 		}
 		this.category.setSelection(position);
+		fillDates();
 	}
 
 	/**
@@ -121,6 +126,21 @@ public class EditOperationActivity extends AddOperationActivity {
 			return this.cashServ.get(givenId);
 		} catch (EntryNotFoundException e) {
 			return null;
+		}
+	}
+
+	private void fillDates() {
+		Calendar movDate = Calendar.getInstance();
+		movDate.setTime(data.getDate());
+		dateYear = movDate.get(Calendar.YEAR);
+		dateMonth = movDate.get(Calendar.MONTH);
+		dateDay = movDate.get(Calendar.DATE);
+		// TODO check if necessary
+		if (data.getEndDate() != null && data.getPeriod() != null) {
+			movDate.setTime(data.getEndDate());
+			endDateYear = movDate.get(Calendar.YEAR);
+			endDateMonth = movDate.get(Calendar.MONTH);
+			endDateDay = movDate.get(Calendar.DATE);
 		}
 	}
 }

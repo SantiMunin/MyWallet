@@ -38,6 +38,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -92,6 +93,7 @@ public class AddOperationActivity extends SherlockActivity {
 	protected CashFlowService cashServ;
 	protected Button dateButton;
 	protected Button endDateButton;
+	protected ImageButton endDateClearButton;
 	protected DateSlider.OnDateSetListener mDateSetListener;
 	protected DateSlider.OnDateSetListener mEndDateSetListener;
 
@@ -184,7 +186,6 @@ public class AddOperationActivity extends SherlockActivity {
 	 * Date picker's dialogs
 	 */
 	protected Dialog onCreateDialog(int id) {
-		Calendar d = GregorianCalendar.getInstance();
 
 		switch (id) {
 		case DATE_DIALOG_ID:
@@ -331,6 +332,17 @@ public class AddOperationActivity extends SherlockActivity {
 			@Override
 			public void onClick(View v) {
 				showDialog(END_DATE_DIALOG_ID);
+			}
+		});
+		endDateClearButton = (ImageButton) findViewById(R.id.addOp_endDateClearButton);
+		endDateClearButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				endDateButton.setText(R.string.indefinite);
+				endDateYear = -1;
+				endDateMonth = -1;
+				endDateDay = -1;
 			}
 		});
 	}

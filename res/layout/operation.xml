@@ -145,6 +145,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/indefinite" />
+            
+            <ImageButton android:id="@+id/addOp_endDateClearButton"
+                android:src="@android:drawable/ic_notification_clear_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
         </TableRow>
 
         <Button
